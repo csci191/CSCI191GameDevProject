@@ -32,7 +32,7 @@ MapLoader::~BackgroundLoader()
 
 MapLoader::drawBG(float width, float height)
 {
-	bTexture->binder();
+	bgTexture->binder();
     glBegin(GL_POLYGON);
         glTexCoord2f(xMin,yMax);
         glVertex3f(-width/height, -1,0.0f);
