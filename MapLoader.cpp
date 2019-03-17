@@ -1,22 +1,86 @@
-#ifndef MAPLOADER_H
-#define MAPLOADER_H
+#include "MapLoader.h"
+#include <TextureLoader.h>
 
-#include<GL/gl.h>
-#include<TextureLoader.h>
+TextureLoader *bgTexture = new TextureLoader;
 
-class MapLoader
+MapLoader::MapLoader()
 {
-	public:
-		MapLoader();
-		MapLoader(float,float,float,float, float); //constructor to initialize tex coord to cutom values
-		virtual ~MapLoader();
+	xMax = 1.0;
+    xMin = 0.0;
+    yMax = 1.0;
+    yMin = 0.0;
+    moveIncrement = 0.001;
+    xD = xMax - xMin;
+    yD = yMax - yMin;
+}
 
-		void drawBG(float width, float height);	//Function to draw square with background texture
-		void mapMovement(std::string direction); //Changes coordinates to move to different zones
+MapLoader::MapLoader(yMinCoor,xMinCoor, yMaxCoor, xMaxCoor, inc)
+{
+	xMax = xMaxCoor;
+    xMin = xMinCoor;
+    yMax = yMaxCoor;
+    yMin = yMinCoor;
+    moveIncrement = inc;
+    xD = xMax - xMin;
+    yD = yMax - yMin;
+}
 
-		float xMax, xMin, yMax, yMin; //Texture coordinates
-		float moveIncrement; //Float to determine how much the map will move by in the mapMove func
-		float xD, yD;    
-	protected:
-	private:
+MapLoader::~BackgroundLoader()
+{
+	//Destructor
+}
+
+MapLoader::drawBG(float width, float height)
+{
+	bTexture->binder();
+    glBegin(GL_POLYGON);
+        glTexCoord2f(xMin,yMax);
+        glVertex3f(-width/height, -1,0.0f);
+
+        glTexCoord2f(xMax,yMax);
+        glVertex3f(width/height,-1,0.0f);
+
+        glTexCoord2f(xMax,yMin);
+        glVertex3f(width/height,1,0.0f);
+
+        glTexCoord2f(xMin,yMin);
+        glVertex3f(-width/height,1,0.0f);
+
+    glEnd();
+}
+
+ 
+MapLoader::mapMovement(std::string direction)
+{
+	if (direction == "right" && xMax < 1.000){
+		xMax -= moveIncrement;
+		xMin -= moveIncrement;
+		if (xMin < 0.000)     //If the map attempts to move out of bounds it readjusts to align with the edge of the image.
+		{
+			xMin = 0.000;
+			xMax = xMin + xD;
+		}
+	}else if(direction == "left" && xMin > 0.000){
+		xMax += moveIncrement;
+		xMin += moveIncrement;
+		if (xMax > 1.000){
+			xMax = 1.000;
+			xMin = xMax - xD;
+		}
+	}else if (direction == "up" && yMax < 1.000){
+		yMax -= moveIncrement;
+		yMin -= moveIncrement;
+		if (yMin < 0.000)
+		{
+			yMin = 0.000;
+			yMax = yMin + yD;
+		}
+	}else if(direction == "down" && yMin > 0.000){
+		yMax += moveIncrement;
+		yMin += moveIncrement;
+		if (yMax > 1.000){
+			yMax = 1.000;
+			yMin = yMax - yD;
+		}
+	}
 }
