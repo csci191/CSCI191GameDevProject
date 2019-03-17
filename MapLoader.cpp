@@ -53,19 +53,19 @@ MapLoader::drawBG(float width, float height)
 MapLoader::mapMovement(std::string direction)
 {
 	if (direction == "right" && xMax < 1.000){
-		xMax -= moveIncrement;
-		xMin -= moveIncrement;
-		if (xMin < 0.000)     //If the map attempts to move out of bounds it readjusts to align with the edge of the image.
-		{
-			xMin = 0.000;
-			xMax = xMin + xD;
-		}
-	}else if(direction == "left" && xMin > 0.000){
 		xMax += moveIncrement;
 		xMin += moveIncrement;
-		if (xMax > 1.000){
+		if (xMax > 1.000)     //If the map attempts to move out of bounds it readjusts to align with the edge of the image.
+		{
 			xMax = 1.000;
 			xMin = xMax - xD;
+		}
+	}else if(direction == "left" && xMin > 0.000){
+		xMax -= moveIncrement;
+		xMin -= moveIncrement;
+		if (xMin < 0.000){
+			xMin = 0.000;
+			xMax = xMin + xD;
 		}
 	}else if (direction == "up" && yMax < 1.000){
 		yMax -= moveIncrement;
