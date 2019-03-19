@@ -1,0 +1,43 @@
+/* Add keyPlayer function to Inputs.h and Inputs.cpp */
+void Inputs::keyPlayer(Player* pl)
+{
+    switch(wParam)
+    {
+    case (VK_RIGHT):
+        pl->playActions("right");
+        break;
+    case VK_UP:
+        pl->playActions("up");
+        break;
+    case (VK_DOWN):
+        pl->playActions("down");
+        break;
+    case VK_LEFT:
+        pl->playActions("left");
+        break;
+    }
+}
+
+/* Update drawGLScene, add line 35 */ 
+GLint GLScene::drawGLScene()
+{
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    /*
+    glPushMatrix();
+    mdl->drawModel();
+    glPopMatrix();
+    */
+    glPushMatrix();
+    para->drawSquare(screenWidth,screenHeight);
+    glPopMatrix();
+
+    glTranslated(ply->position.x,ply->position.y,-1); // centers
+    ply->drawPlayer();
+
+    //ply->playActions("right");
+    //para->scroll(true, "left", 0.005);
+}
+
+/* call keyPlayer in GLScene::winMsg under case WM_KEYDOWN */
+KbMs ->keyPlayer(ply);
