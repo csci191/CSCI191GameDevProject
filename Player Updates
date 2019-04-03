@@ -4,15 +4,45 @@ void Inputs::keyPlayer(Player* pl)
     switch(wParam)
     {
     case (VK_RIGHT):
+        if(Time->getTicks()>150){
+
+
+                xMin += 0.333;
+                xMax += 0.333;
+                Time->reset();
+            }
         pl->playActions("right");
         break;
     case VK_UP:
+        if(Time->getTicks()>150){
+
+
+                xMin += 0.333;
+                xMax += 0.333;
+                Time->reset();
+            }
         pl->playActions("up");
         break;
     case (VK_DOWN):
+    
+        if(Time->getTicks()>150){
+
+
+                xMin += 0.333;
+                xMax += 0.333;
+                Time->reset();
+            }
         pl->playActions("down");
         break;
     case VK_LEFT:
+    
+        if(Time->getTicks()>150){
+
+
+                xMin += 0.333;
+                xMax += 0.333;
+                Time->reset();
+            }
         pl->playActions("left");
         break;
     }
