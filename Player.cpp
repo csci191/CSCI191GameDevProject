@@ -80,9 +80,9 @@ void Player::playerInit(char* filename)
     ymax=.25;
 }
 
-void Player::playActions(string action)
+void Player::playActions()
 {
-    if(action == "up")
+    if(actionTrigger == "up")
     {
         ymin=0;
         ymax=.25;
@@ -90,7 +90,7 @@ void Player::playActions(string action)
         position.y += .1/100 * speed; // moves player up
     }
 
-    if(action == "down")
+    if(actionTrigger == "down")
     {
         ymin = .50;
         ymax = .75;
@@ -98,7 +98,7 @@ void Player::playActions(string action)
         position.y -= .1/100* speed; // moves player down
     }
 
-    if(action == "left")
+    if(actionTrigger == "left")
     {
         ymin=.25;
         ymax=.5; //.5
@@ -106,7 +106,7 @@ void Player::playActions(string action)
         position.x -= .1/100* speed; // moves player left
     }
 
-    if(action == "right")
+    if(actionTrigger == "right")
     {
         ymin = .75;
         ymax = 1;
