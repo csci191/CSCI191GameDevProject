@@ -34,39 +34,46 @@ void Inputs::keyEn(Parallax* plx, float speed)
 }
 
 
-void Inputs::playerAction(player* ply)
+void Inputs::playerAction(player* pl)
 {
      switch(wParam){
 
         case VK_LEFT:
-            if(ply->actionTrigger=="Right"){
-                float temp= ply->xMax;
-                ply->xMax=ply->xMin;
-                ply->xMin=temp;
+            if(pl->actionTrigger=="Right"){
+                float temp= pl->xMax;
+                pl->xMax=ply->xMin;
+                pl->xMin=temp;
             }
-            ply->actionTrigger= "Left";
+            pl->actionTrigger= "Left";
 
             break;
         case VK_RIGHT:
 
-           if(ply->actionTrigger=="Left"){
-                float temp= ply->xMax;
-                ply->xMax=ply->xMin;
-                ply->xMin=temp;
+           if(pl->actionTrigger=="Left"){
+                float temp= pl->xMax;
+                pl->xMax=pl->xMin;
+                pl->xMin=temp;
             }
-            ply->actionTrigger="Right";
+            pl->actionTrigger="Right";
             break;
         case VK_UP:
-            ply->actionTrigger="Jump";
+             if(pl->actionTrigger=="Down"){
+                float temp= pl->yMax;
+                pl->yMax=pl->yMin;
+                pl->yMin=temp;
+            }
+            pl->actionTrigger="Up";
             break;
         case VK_DOWN:
-            ply->actionTrigger="Down";
+             if(pl->actionTrigger=="Up"){
+                float temp= pl->yMax;
+                pl->yMax=pl->yMin;
+                pl->yMin=temp;
+            }
+            pl->actionTrigger="Down";
             break;
 
-        case VK_TAB:
-        ply->actionTrigger = "change";
-        break;
-
+        
         }
 }
 
