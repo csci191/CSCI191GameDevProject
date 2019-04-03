@@ -23,6 +23,8 @@ class Player
 
         float xmin, ymin, xmax, ymax;
         int speed;
+    
+        string actionTrigger;
 
     protected:
 
