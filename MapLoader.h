@@ -11,12 +11,15 @@ class MapLoader
 		MapLoader(float,float,float,float, float); //constructor to initialize tex coord to cutom values
 		virtual ~MapLoader();
 
-		void drawBG(float width, float height);	//Function to draw square with background texture
+		TextureLoader *bgTexture = new TextureLoader();
+
+		void drawBG(float, float);	//Function to draw square with background texture
 		void mapMovement(std::string direction); //Changes coordinates to move to different zones
 
 		float xMax, xMin, yMax, yMin; //Texture coordinates
 		float moveIncrement; //Float to determine how much the map will move by in the mapMove func
-		float xD, yD;    
+		float xD, yD;
 	protected:
 	private:
-}
+};
+#endif
