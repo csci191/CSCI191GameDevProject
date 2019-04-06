@@ -1,7 +1,7 @@
 #include "MapLoader.h"
 #include <TextureLoader.h>
 
-TextureLoader *bgTexture = new TextureLoader;
+TextureLoader *bgTexture = new TextureLoader();
 
 MapLoader::MapLoader()
 {
