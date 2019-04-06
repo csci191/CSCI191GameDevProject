@@ -1,7 +1,6 @@
 #include "MapLoader.h"
 #include <TextureLoader.h>
 
-TextureLoader *bgTexture = new TextureLoader();
 
 MapLoader::MapLoader()
 {
@@ -14,7 +13,7 @@ MapLoader::MapLoader()
     yD = yMax - yMin;
 }
 
-MapLoader::MapLoader(yMinCoor,xMinCoor, yMaxCoor, xMaxCoor, inc)
+MapLoader::MapLoader(float yMinCoor,float xMinCoor,float  yMaxCoor, float xMaxCoor,float inc)
 {
 	xMax = xMaxCoor;
     xMin = xMinCoor;
@@ -25,12 +24,12 @@ MapLoader::MapLoader(yMinCoor,xMinCoor, yMaxCoor, xMaxCoor, inc)
     yD = yMax - yMin;
 }
 
-MapLoader::~BackgroundLoader()
+MapLoader::~MapLoader()
 {
 	//Destructor
 }
 
-MapLoader::drawBG(float width, float height)
+void MapLoader::drawBG(float width, float height)
 {
 	bgTexture->binder();
     glBegin(GL_POLYGON);
@@ -49,8 +48,8 @@ MapLoader::drawBG(float width, float height)
     glEnd();
 }
 
- 
-MapLoader::mapMovement(std::string direction)
+
+void MapLoader::mapMovement(std::string direction)
 {
 	if (direction == "right" && xMax < 1.000){
 		xMax += moveIncrement;
