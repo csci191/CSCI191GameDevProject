@@ -18,13 +18,13 @@ class Player
 
         void drawPlayer();
         void playerInit(char* );
-        void playActions(string);
+        void playActions(std::string);
         void playerAnimation();
 
         float xmin, ymin, xmax, ymax;
         int speed;
-    
-        string actionTrigger;
+
+        std::string actionTrigger;
 
     protected:
 
