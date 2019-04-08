@@ -1,10 +1,10 @@
 #include "Player.h"
-#include<textureLoader.h>
+#include<TextureLoader.h>
 #include<Timer.h>
 #include<GL/gl.h>
 using namespace std;
 
-textureLoader* t= new textureLoader();
+TextureLoader* t= new TextureLoader();
 Timer* tt = new Timer();
 
 Player::Player()
@@ -12,19 +12,19 @@ Player::Player()
     //ctor
     verticies[0].x =  0.0;
     verticies[0].y =  0.0;
-    verticies[0].z =  -0.1;
+    verticies[0].z =  -7;
 
-    verticies[1].x =  1.0;
+    verticies[1].x =  0.4;
     verticies[1].y =  0.0;
-    verticies[1].z =  -0.1;
+    verticies[1].z =  -7;
 
-    verticies[2].x =  1.0;
-    verticies[2].y =  1.0;
-    verticies[2].z =  -0.1;
+    verticies[2].x =  0.4;
+    verticies[2].y =  0.4;
+    verticies[2].z =  -7;
 
     verticies[3].x =  0.0;
-    verticies[3].y =  1.0;
-    verticies[3].z =  -0.1;
+    verticies[3].y =  0.4;
+    verticies[3].z =  -7;
 
     xmin=0;
     ymin=0;
@@ -33,9 +33,9 @@ Player::Player()
 
     position.x = -.1;
     position.y = -.1;
-    position.z = -1;
+    position.z = 0;
 
-    speed = 2;
+    speed = 5;
 }
 
 Player::~Player()
@@ -47,7 +47,8 @@ void Player::drawPlayer()
 {
 
     t->binder();
-    //glScaled(.1,.1,1.0);
+    glScaled(1.0,1.0,1.0);
+    glTranslatef(position.x, position.y,position.z);
     glPushMatrix();
     glBegin(GL_QUADS);
         glTexCoord2f(xmin,ymax);
@@ -70,7 +71,7 @@ void Player::playerInit(char* filename)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    t->bindTexture(filename);
+    t->loadTexture(filename);
 
     /* First frame in sprite sheet*/
     xmin=0;
@@ -80,14 +81,15 @@ void Player::playerInit(char* filename)
     ymax=.25;
 }
 
-void Player::playActions()
+void Player::playActions(std::string dir)
 {
+    actionTrigger = dir;
     if(actionTrigger == "up")
     {
         ymin=0;
         ymax=.25;
         playerAnimation();
-        position.y += .1/100 * speed; // moves player up
+        position.y += .5/100 * speed; // moves player up
     }
 
     if(actionTrigger == "down")
@@ -95,7 +97,7 @@ void Player::playActions()
         ymin = .50;
         ymax = .75;
         playerAnimation();
-        position.y -= .1/100* speed; // moves player down
+        position.y -= .5/100* speed; // moves player down
     }
 
     if(actionTrigger == "left")
@@ -103,7 +105,7 @@ void Player::playActions()
         ymin=.25;
         ymax=.5; //.5
         playerAnimation();
-        position.x -= .1/100* speed; // moves player left
+        position.x -= .5/100* speed; // moves player left
     }
 
     if(actionTrigger == "right")
@@ -111,13 +113,13 @@ void Player::playActions()
         ymin = .75;
         ymax = 1;
         playerAnimation();
-        position.x += .1/100 * speed; // moves player right
+        position.x += .5/100 * speed; // moves player right
     }
 }
 
 void Player::playerAnimation() // plays animation
 {
-    if(tt->getTickets() > 100)
+    if(tt->getTicks() > 100)
     {
         xmin +=.1111111111;
         xmax +=.1111111111;
