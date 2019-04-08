@@ -4,14 +4,6 @@
 #include <GL/gl.h>
 #include <TextureLoader.h>
 #include <Timer.h>
-//#include <Player.h>
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-}vecEnm;
 
 class EnemyChar
 {
@@ -19,25 +11,37 @@ class EnemyChar
         EnemyChar();
         virtual ~EnemyChar();
 
-        void drawEnemyChar();
-        void enemycharInit(char*);
-        void enemycharActions();
-        void enemycharMove(int);
+        void drawEnemy();
+        void placeEnemy(float, float, float);
+        void enemyActions();
+        void enemyInit();
 
-        //void collision(Player*);
+        bool isEnemyLive = true;
+        GLuint enemyTex;
 
-        int actionTrigger;
-        vecEnm verticies[4];
-        vecEnm position;
-        float xMin, yMin, xMax, yMax;
+        float xPos;
+        float yPos;
+        float zPos;
 
-        float xPos, yPos, zPos;
-        float xSize, ySize;
-        int eMax, eMin;
-        int speed;
+        float xSize;
+        float ySize;
+        float zSize;
 
-        TextureLoader *TEnmChar = new TextureLoader();
-        Timer *TimeEnmChar = new Timer();
+        float rotateX;
+        float rotateY;
+        float rotateZ;
+
+        int Frames;
+        int actionEnemy = 0;
+
+        Timer *TE = new Timer();
+
+        float xMin;
+        float xMax;
+        float yMax;
+        float yMin;
+
+        float xMove, yMove;
 
     protected:
 
