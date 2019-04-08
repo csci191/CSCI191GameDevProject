@@ -1,9 +1,10 @@
 #ifndef INPUTS_H
 #define INPUTS_H
 #include<windows.h>
-#include<Model.h>
-#include<Parallax.h>
-#include<player.h>
+//#include<Model.h>
+//#include<Parallax.h>
+#include<Player.h>
+#include<GLScene.h>
 
 
 class Inputs
@@ -14,10 +15,12 @@ class Inputs
 
 
 
-         void keyEn(Parallax*, float); // move parallax
+//         void keyEn(Parallax*, float); // move parallax
 
+        float keyArrow(float);
+      void Menu(GLScene*, float);
 
-        void playerAction(player*);
+        void playerAction(Player*);
 
 
         double prev_mouse_X;
