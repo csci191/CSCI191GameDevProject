@@ -3,19 +3,19 @@
 EnemyChar::EnemyChar()
 {
     //ctor
-    xPos = 0.0;
+    xPos = 0.1;
     yPos = 0.0;
     zPos = -1.0;
 
-    xSize = 0.0;
-    ySize = 0.0;
+    xSize = 0.02;
+    ySize = 0.02;
 
     rotateX = 0.0;
     rotateY = 0.0;
     rotateZ = 0.0;
 
     xMove = 0.0;
-    yMove = 0.01;
+    yMove = 0.001;
 }
 
 EnemyChar::~EnemyChar()
@@ -25,6 +25,10 @@ EnemyChar::~EnemyChar()
 
 void EnemyChar::drawEnemy()
 {
+    if(isEnemyLive)
+    {
+
+
     glPushMatrix();
 
     glTranslated(xPos, yPos, zPos);
@@ -50,6 +54,7 @@ void EnemyChar::drawEnemy()
     glEnd();
 
     glPopMatrix();
+    }
 }
 
 void EnemyChar::placeEnemy(float x, float y, float z)
@@ -165,5 +170,5 @@ void EnemyChar::enemyInit()
     yMin = 0.0;
     yMax = 0.25 / (float)Frames;
 
-    yPos = -0.8;
+
 }
