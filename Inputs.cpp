@@ -15,7 +15,7 @@ Inputs::~Inputs()
 }
 
 
-
+/*
 void Inputs::keyEn(Parallax* plx, float speed)
 {
     switch(wParam){
@@ -32,49 +32,81 @@ void Inputs::keyEn(Parallax* plx, float speed)
 
     }
 }
+*/
 
-
-void Inputs::playerAction(player* pl)
+void Inputs::playerAction(Player* pl)
 {
      switch(wParam){
 
         case VK_LEFT:
-            if(pl->actionTrigger=="Right"){
-                float temp= pl->xMax;
-                pl->xMax=ply->xMin;
-                pl->xMin=temp;
-            }
-            pl->actionTrigger= "Left";
+            //if(pl->actionTrigger=="Right"){
+              //  float temp= pl->xmax;
+               // pl->xmax=pl->xmin;
+               // pl->xmin=temp;
+            //}
+            pl->playActions("left");
 
             break;
         case VK_RIGHT:
 
-           if(pl->actionTrigger=="Left"){
-                float temp= pl->xMax;
-                pl->xMax=pl->xMin;
-                pl->xMin=temp;
-            }
-            pl->actionTrigger="Right";
+           //if(pl->actionTrigger=="Left"){
+             //   float temp= pl->xmax;
+               // pl->xmax=pl->xmin;
+               // pl->xmin=temp;
+            //}
+            pl->playActions("right");
             break;
         case VK_UP:
-             if(pl->actionTrigger=="Down"){
-                float temp= pl->yMax;
-                pl->yMax=pl->yMin;
-                pl->yMin=temp;
-            }
-            pl->actionTrigger="Up";
+             //if(pl->actionTrigger=="Down"){
+               // float temp= pl->ymax;
+               // pl->ymax=pl->ymin;
+                //pl->ymin=temp;
+            //}
+            pl->playActions("up");
             break;
         case VK_DOWN:
-             if(pl->actionTrigger=="Up"){
-                float temp= pl->yMax;
-                pl->yMax=pl->yMin;
-                pl->yMin=temp;
-            }
-            pl->actionTrigger="Down";
+             //if(pl->actionTrigger=="Up"){
+               // float temp= pl->ymax;
+                //pl->ymax=pl->ymin;
+                //pl->ymin=temp;
+            //}
+            pl->playActions("down");
             break;
 
-        
+
         }
 }
 
+ void Inputs::Menu(GLScene* g, float arrow)
+{
+    switch(wParam)
+    {
+        case VK_SPACE:
+            if(arrow >-6 && g->mainMenu==true){g->mainMenu=false;}
+            if(arrow <-6 && g->mainMenu==true){g->exitGame=true;}
+            if(g->startMenu){g->startMenu = false; g->mainMenu = true;}
+            break;
+        case VK_ESCAPE:
+            if(!g->pause && !g->startMenu && !g->mainMenu){g->pause=true;}
+            else{g->pause=false;}
+            break;
+        case 'Q':
+            if(g->pause){g->pause=false; g->mainMenu = true;}
+            break;
+    }
+}
+
+float Inputs::keyArrow(float y)
+{
+    switch(wParam)
+    {
+        case VK_UP:
+            return -.2;
+            break;
+        case VK_DOWN:
+            return -6.4;
+            break;
+    }
+    return y;
+}
 
