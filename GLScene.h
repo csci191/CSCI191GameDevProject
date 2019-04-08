@@ -16,6 +16,10 @@ class GLScene
         int winMsg(HWND, UINT, WPARAM, LPARAM);
         float screenWidth;
         float screenHeight;
+        bool pause = false;
+        bool startMenu = true;
+        bool mainMenu = false;
+        bool exitGame = false;
 
         WPARAM wParam;
 
