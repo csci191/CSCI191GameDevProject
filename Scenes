@@ -1,0 +1,211 @@
+/ ADD BOOL TO GLSCENE.H /
+bool pause = false;
+bool startMenu = true;
+bool mainMenu = false;
+bool exitGame = false;
+
+
+------------------------------------------------------------------------------------------------
+
+
+/ ADD THESE TO GLSCENE.CPP/
+/* START MENU'S TEXTURE AND OBJECTS */
+objects* StartObjects = new objects();           // STARTMENU MAIN LOGO OBJECT
+objects* StartObjects1 = new objects();          // STARTMENU CONTROL OJBECT
+Parallax* StartPara = new Parallax();            // STARTMENU PARALLAX
+textureLoader* StartLogo = new textureLoader();
+textureLoader* StartBG = new textureLoader();
+textureLoader* StartPress = new textureLoader();
+
+
+/* MAIN MENU'S TEXTURE AND OBJECTS */
+objects MMObjects[3];
+Parallax* MMPara = new Parallax();
+textureLoader* MMStart = new textureLoader();
+textureLoader* MMOption = new textureLoader();
+textureLoader* MMQuit = new textureLoader();
+textureLoader* MMBG = new textureLoader();
+
+/* MAIN GAME'S TEXTURE AND OBJECTS */
+textureLoader* GameBG = new textureLoader();   // BACKGROUND TEXTURE OF THE GAME
+textureLoader* RQTex = new textureLoader();    // TEXTURE FOR OPTION WINDOW
+objects* RQ = new objects();                   // OBJECT FOR OPTION WINDOW
+Parallax* GamePara = new Parallax();           // PARALLAX FOR GAME
+
+
+/* ARROW CURSOR */
+objects* arrow = new objects();            // ARROW OBJECT
+textureLoader* AT = new textureLoader();   // ARROW TEXTURE
+
+
+------------------------------------------------------------------------------------------------
+
+
+/ADD THESE TO GLSCENE::INITGL/
+/* INITIALIZE FOR START MENU */
+    StartLogo->loadTexture("Image/Game.png");         // STORE LOGO TEXTURE
+    StartPress->loadTexture("Image/PressSpace.png");
+    StartBG->loadTexture("Image/StartMenu.png");      // STORE PARALLAX TEXTURE
+    StartObjects->objectTex = StartLogo->tex;         // INITIALIZE LOGO TEXTURE
+    StartObjects1->objectTex = StartPress->tex;
+    StartPara->paraTex = StartBG->tex;                // INITIALIZE PARALLAX TEXTURE
+
+    /* INITIALIZE FOR Main Menu */
+    MMStart->loadTexture("Image/MMStart.png");
+    MMQuit->loadTexture("Image/MMQuit.png");
+    MMBG->loadTexture("Image/MainMenu.png");
+    MMObjects[0].objectTex = MMStart->tex;
+    MMObjects[1].objectTex = MMQuit->tex;
+    MMPara->paraTex = MMBG->tex;
+
+    /* INITIALIZE FOR GAME */
+    GameBG->loadTexture("Image/cloud.jpg");       // STORE PARALLAX TEXTURE
+    RQTex->loadTexture("Image/RQ.png");
+    GamePara->paraTex = GameBG->tex;              // LOAD PARLLAX
+    RQ->objectTex = RQTex->tex;
+    //mdl->modelInit("Image/deeznuts.jpg");       // INITIALIZE TEXTURE FOR TEAPOT
+    ply->playerInit("Image/pix.png");             // INITIALIZE TEXTURE FOR PLAYER
+
+
+    AT->loadTexture("Image/arrow.png");
+    arrow->objectTex = AT->tex;
+    arrow->position.y = -.2;
+    EChar->enemycharInit("Image/enemy.png");
+    
+    ------------------------------------------------------------------------------------------------
+    
+    /REPLACE EVERYTHING IN DRAWGLSCENE WITH THIS/
+    if(startMenu) // RENDERS STARTMENU
+    {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+
+
+        glPushMatrix();
+        StartPara->drawSquare(screenWidth,screenHeight);
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(.5,.25,1);
+        glTranslated(-.5,-1.7,-1);
+        StartObjects1->drawObj();
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(1,.5,1);
+        glTranslated(-.5,-.15,-1);
+        StartObjects->drawObj();
+        glPopMatrix();
+    }
+    else if(mainMenu) // RENDERS MAINMENU
+    {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+
+        glPushMatrix();
+        MMPara->drawSquare(screenWidth,screenHeight);
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(.05,.05,1);
+        glTranslated(2.5,arrow->position.y,-1);
+        arrow->drawObj();
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(.3,.3,1);
+        glTranslated(-.5,-.5,-1);
+        MMObjects[0].drawObj();
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(.3,.3,1);
+        glTranslated(-.5,-1.5,-1);
+        MMObjects[1].drawObj();
+        glPopMatrix();
+    }
+
+    else if(!mainMenu && !startMenu) // RENDERS MAIN GAME
+    {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+
+        glPushMatrix();
+        GamePara->drawSquare(screenWidth,screenHeight);
+        glPopMatrix();
+
+        if(pause) // POPUP WINDOW FOR QUITTING
+        {
+            glPushMatrix();
+            glScaled(.2,.2,1);
+            glTranslated(0,0,-1);
+            RQ->drawObj();
+            glPopMatrix();
+        }
+
+        glPushMatrix();
+        glTranslated(ply->position.x,ply->position.y,-1); // centers
+        ply->drawPlayer();
+        glPopMatrix();
+
+    }
+    
+      ------------------------------------------------------------------------------------------------
+      
+      / UPDATE CASE WM_KEYDOWN/
+      KbMs ->wParam = wParam;
+		    if(!mainMenu && !startMenu)
+            {
+                //KbMs ->keyPressed(mdl);
+                if(!pause){KbMs ->keyPlayer(ply);}
+            }
+            if(mainMenu)
+            {
+                arrow->position.y = KbMs->keyArrow(arrow->position.y);
+            }
+            KbMs->Menu(this,arrow->position.y);
+            
+       ------------------------------------------------------------------------------------------------
+ / ADD FUNCTIONS TO INPUT.CPP/
+ void Inputs::Menu(GLScene* g, float arrow)
+{
+    switch(wParam)
+    {
+        case VK_SPACE:
+            if(arrow >-6 && g->mainMenu==true){g->mainMenu=false;}
+            if(arrow <-6 && g->mainMenu==true){g->exitGame=true;}
+            if(g->startMenu){g->startMenu = false; g->mainMenu = true;}
+            break;
+        case VK_ESCAPE:
+            if(!g->pause && !g->startMenu && !g->mainMenu){g->pause=true;}
+            else{g->pause=false;}
+            break;
+        case 'Q':
+            if(g->pause){g->exitGame=true;}
+            break;
+    }
+}
+
+float Inputs::keyArrow(float y)
+{
+    switch(wParam)
+    {
+        case VK_UP:
+            return -.2;
+            break;
+        case VK_DOWN:
+            return -6.4;
+            break;
+    }
+    return y;
+}
+
+      -------------------------------------------------------------------------------------------------
+      
+      /ADD FUNCTION TO INPUT.H/
+      float keyArrow(float);
+      void Menu(GLScene*, float);
+      
+      
+-------------------------------------------------------------------------------------------------
+
