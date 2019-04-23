@@ -1,0 +1,31 @@
+/* ADD TO GLSCENE.CPP */
+
+#include<loadShader.h>                  // MUST BE THE FIRST INCLUDE
+loadShader* shader = new loadShader();
+float a,h; // pass values to shader
+GLint loc;
+
+----------------------------------------------------------------------
+/* ADD TO GLScene::initGL */
+
+shader->initShader("v.vs","f.fs");
+
+----------------------------------------------------------------------
+/* ADD TO GLScene::drawGLScene
+
+glUseProgram(shader->program);
+    loc = glGetUniformLocation(shader->program, "scale");
+    if(loc!=-1){glUniform1f(loc,a);}
+    glPushMatrix();
+    glTranslated(0.0,0.0,-6.0);
+    glBegin(GL_TRIANGLES);
+    glVertex3f(-3.0,0.0,0.0);
+    glVertex3f(0.0,-2.0,0.0);
+    glVertex3f(0.0,0.0,0.0);
+    glEnd();
+    glPopMatrix();
+
+    glUseProgram(0);
+    (a<.1)?h=1:NULL;
+    (a>1.5)?h-1:NULL;
+     a+=.1*h;
