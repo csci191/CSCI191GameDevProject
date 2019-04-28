@@ -31,10 +31,10 @@ MapFrames::initFrames(char *fileName)
         		   //else we move into the parser
 
         if ( strcmp( lineHeader, "i" ) == 0){
-        	fscanf(file, "%i\n", frameCount);
+        	fscanf(file, "%d\n", frameCount);
         	frames = new AdjacencyMatrix[frameCount]
         }else if (strcmp( lineHeader, "p") == 0){
-        	fscanf(file, "%i %i\n", tempH, tempV);
+        	fscanf(file, "%d %d\n", tempH, tempV);
         	frames->adjPush(tempH, tempV);
         }
 
