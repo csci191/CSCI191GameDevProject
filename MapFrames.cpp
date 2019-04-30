@@ -10,7 +10,7 @@ MapFrames::~MapFrames()
 
 }
 
-/*Wil read map file and define each map sections adjMtrx*/
+/*Wil read map file and define inaccessable sections adjMtrx*/
 MapFrames::initFrames(char *fileName)
 {
 	//File reading the C way
@@ -20,6 +20,7 @@ MapFrames::initFrames(char *fileName)
         return;
     }
     int tempH, tempV;
+    int currentF = 0;
     //Loop for file reading
     while(1){
     	char lineHeader[128]; //Temp value assuming lines will not exceed 128 char length
@@ -35,7 +36,10 @@ MapFrames::initFrames(char *fileName)
         	frames = new AdjacencyMatrix[frameCount]
         }else if (strcmp( lineHeader, "p") == 0){
         	fscanf(file, "%d %d\n", tempH, tempV);
-        	frames->adjPush(tempH, tempV);
+        	frames[currentF]->adjPop(tempH, tempV);
+        	frames[currentF]->adjPop(tempV, tempH);
+        }else if(strcmp( lineHeader, "f" ) == 0){
+        	fscanf(file, "%d\n", currentF);
         }
 
     }
