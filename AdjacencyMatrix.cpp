@@ -1,57 +1,30 @@
-#include "AdjacencyMatrix.h"
-//irrKlang for sounds
+#ifndef ADJACENCYMATRIX_H
+#define ADJACENCYMATRIX_H
+/*
+The Matrix is designed int the format [Rows][Columns]
+[0][0] is top left [0][9] is top right in a 10X10 Matrix
+*/
 
-//Default is values are based on the project this class was designed for
-AdjacencyMatrix::AdjacencyMatrix()
+class AdjacencyMatrix
 {
-	C = 100;
-	R = 100;
-	adjMtrx = new int *[R];
-	for (int i = 0; i < R; i++){
-		adjMtrx[i] = new int[C];
-	}
+    private:
+        int C; //columns
+        int R; //rows
+    public:
+        AdjacencyMatrix();
+        AdjacencyMatrix(int, int);
 
-	for(int i = 0; i < R; i++){
-		for (int j = 0; j < C; j++){
-			adjMtrx[i][j] = 0;
-		}
-	}
-}
+        virtual ~AdjacencyMatrix();
 
-AdjacencyMatrix::AdjacencyMatrix(int columns, int rows)
-{
-	C = columns;
-	R = rows;
-	adjMtrx = new int *[R];
-	for (int i = 0; i < R; i++){
-		adjMtrx[i] = new int[C];
-	}
+        void adjPush(int, int);
+        void adjPop(int, int);
+        void createClearMap();
 
-	for(int i = 0; i < R; i++){
-		for (int j = 0; j < C; j++){
-			adjMtrx[i][j] = 0;
-		}
-	}
-}
+        int **adjMtrx;
 
-AdjacencyMatrix::~AdjacencyMatrix()
-{
-	for (int i = 0; i < R; i++){
-		delete [] adjMtrx[i];
-	}
-	delete [] adjMtrx;
-}
+    protected:
 
-AdjacencyMatrix::adjPush(int h, int v)
-{
-	if ( (h >= 0 && h < R) && (v >= 0 && h < C) ){
-		adjMtrx[h][v] = 1;
-	}
-}
+    private:
+};
 
-AdjacencyMatrix::adjPop(int h, int v)
-{
-	if ( (h >= 0 && h < R) && (v >= 0 && h < C) ){
-		adjMtrx[h][v] = 0;
-	}
-}
+#endif 
