@@ -18,6 +18,7 @@ class AdjacencyMatrix
 
         void adjPush(int, int);
         void adjPop(int, int);
+        void createClearMap();
 
         int **adjMtrx;
 
