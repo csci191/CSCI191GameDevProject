@@ -16,6 +16,7 @@ class MapLoader
 		void drawBG(float, float);	//Function to draw square with background texture
 		void mapMovement(std::string direction); //Changes coordinates to move to different zones
 		void mapInit(char *);
+		int objectPosition(float, float); //Function that returns which cell player is in
 
 		float xMax, xMin, yMax, yMin; //Texture coordinates
 		float moveIncrementX, moveIncrementY; //Float to determine how much the map will move by in the mapMove func
