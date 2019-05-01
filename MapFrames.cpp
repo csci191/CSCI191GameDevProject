@@ -1,4 +1,6 @@
 #include "MapFrames.h"
+#include <stdio.h>
+#include <string.h>
 
 MapFrames::MapFrames()
 {
@@ -11,7 +13,7 @@ MapFrames::~MapFrames()
 }
 
 /*Wil read map file and define inaccessable sections adjMtrx*/
-MapFrames::initFrames(char *fileName)
+void MapFrames::initFrames(char *fileName)
 {
 	//File reading the C way
 	FILE * file = fopen(fileName, "r");
@@ -33,11 +35,11 @@ MapFrames::initFrames(char *fileName)
 
         if ( strcmp( lineHeader, "i" ) == 0){
         	fscanf(file, "%d\n", frameCount);
-        	frames = new AdjacencyMatrix[frameCount]
+        	frames = new AdjacencyMatrix[frameCount];
         }else if (strcmp( lineHeader, "p") == 0){
         	fscanf(file, "%d %d\n", tempH, tempV);
-        	frames[currentF]->adjPop(tempH, tempV);
-        	frames[currentF]->adjPop(tempV, tempH);
+        	frames[currentF].adjPop(tempH, tempV);
+        	frames[currentF].adjPop(tempV, tempH);
         }else if(strcmp( lineHeader, "f" ) == 0){
         	fscanf(file, "%d\n", currentF);
         }
