@@ -2,7 +2,6 @@
 #include <TextureLoader.h>
 #include "MapFrames.h"
 
-
 MapLoader::MapLoader()
 {
 	xMax = 1.0;
@@ -86,21 +85,23 @@ void MapLoader::mapMovement(std::string direction)
 		}
 	}
 }
-void MapLoader::mapInit(char *FileName)
+void MapLoader::mapInit(char *FileName, char *SecondFile)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     bgTexture->loadTexture(FileName);
+    mp->initFrames(SecondFile);
 }
 int MapLoader::objectPosition(float x, float y)
 {
-    int xinc = 0.3;
-    int yinc = 0.166;
-    int xMarkMin = -1.7;
-    int xMarkMax = xMarkMin + xinc;
-    int yMarkMax = 0.76;
-    int yMarkMin = yMarkMax - yinc;
-    int yP, xP;
+    float xMarkMin = -1.775;
+    float xinc = 0.3145;
+    float yinc = 0.17;
+    float xMarkMax = xMarkMin + xinc;
+    float yMarkMax = 0.8;
+    float yMarkMin = yMarkMax - yinc;
+    int yP = 0;
+    int xP = 0;
     for (int i = 0; i < 10; i ++){
         if (x >= xMarkMin && x <= xMarkMax){
             xP = i;
