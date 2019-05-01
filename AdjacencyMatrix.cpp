@@ -44,21 +44,21 @@ AdjacencyMatrix::~AdjacencyMatrix()
 	delete [] adjMtrx;
 }
 
-AdjacencyMatrix::adjPush(int h, int v)
+void AdjacencyMatrix::adjPush(int h, int v)
 {
 	if ( (h >= 0 && h < R) && (v >= 0 && h < C) ){
 		adjMtrx[h][v] = 1;
 	}
 }
 
-AdjacencyMatrix::adjPop(int h, int v)
+void AdjacencyMatrix::adjPop(int h, int v)
 {
 	if ( (h >= 0 && h < R) && (v >= 0 && h < C) ){
 		adjMtrx[h][v] = 0;
 	}
 }
 
-AdjacencyMatrix::createClearMap()
+void AdjacencyMatrix::createClearMap()
 {
 	int temp = (int)sqrt(C);
 	adjPush(0,1);
