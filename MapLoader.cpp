@@ -1,5 +1,6 @@
 #include "MapLoader.h"
 #include <TextureLoader.h>
+#include "MapFrames.h"
 
 
 MapLoader::MapLoader()
@@ -90,4 +91,27 @@ void MapLoader::mapInit(char *FileName)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     bgTexture->loadTexture(FileName);
+}
+int MapLoader::objectPosition(float x, float y)
+{
+    int xinc = 0.3;
+    int yinc = 0.166;
+    int xMarkMin = -1.7;
+    int xMarkMax = xMarkMin + xinc;
+    int yMarkMax = 0.76;
+    int yMarkMin = yMarkMax - yinc;
+    int yP, xP;
+    for (int i = 0; i < 10; i ++){
+        if (x >= xMarkMin && x <= xMarkMax){
+            xP = i;
+        }
+        if(y >= yMarkMin && y <= yMarkMax){
+            yP = i*10;
+        }
+        xMarkMax += xinc;
+        xMarkMin += xinc;
+        yMarkMax -= yinc;
+        yMarkMin -= yinc;
+    }
+    return yP + xP;
 }
