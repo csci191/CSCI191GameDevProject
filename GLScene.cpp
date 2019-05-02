@@ -78,7 +78,7 @@ GLint GLScene::initGL()
     MMPara->paraTex = MMBG->tex;
 
     /* INITIALIZE FOR GAME */
-    Map1->mapInit("images/Maps/Map1.png");
+    Map1->mapInit("images/Maps/Map1.png", "mapData/Map1.txt");
     RQTex->loadTexture("images/RQ.png");
     GamePara->paraTex = Map1->bgTexture->tex;              // LOAD PARLLAX
     RQ->objectTex = RQTex->tex;
@@ -198,24 +198,24 @@ GLint GLScene::drawScene()
     if (Ply->position.x >= 1.3 || Ply->position.x<=-1.7)
     {
         if(Ply->position.x >= 1.3){
-            Ply->position.x = -1.5;
-            Map1->mapMovement("right");
+            //Ply->position.x = -1.65;
+            //Map1->mapMovement("right");
             EChar->isEnemyLive = false;
         }else{
-            Ply->position.x = 1.1;
-            Map1->mapMovement("left");
-            EChar->isEnemyLive = false;
+            //Ply->position.x = 1.25;
+            //Map1->mapMovement("left");
+            //EChar->isEnemyLive = false;
         }
     }
     if(Ply->position.y >= 0.76 || Ply->position.y <= -0.9)
     {
         if(Ply->position.y > 0.76){
-            Ply->position.y = -0.8;
-            Map1->mapMovement("up");
+            //Ply->position.y = -0.85;
+            //Map1->mapMovement("up");
             EChar->isEnemyLive = false;
         }else{
-            Ply->position.y = 0.7;
-            Map1->mapMovement("down");
+            //Ply->position.y = 0.71;
+            //Map1->mapMovement("down");
             EChar->isEnemyLive = false;
         }
     }
