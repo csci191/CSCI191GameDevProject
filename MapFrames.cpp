@@ -1,4 +1,6 @@
 #include "MapFrames.h"
+#include<stdlib.h>
+#include<fstream>
 #include <stdio.h>
 #include <string.h>
 
@@ -15,14 +17,15 @@ MapFrames::~MapFrames()
 /*Wil read map file and define inaccessable sections adjMtrx*/
 void MapFrames::initFrames(char *fileName)
 {
+    float tempH = 0;
+    float tempV = 0;
+    float currentF = 0;
 	//File reading the C way
 	FILE * file = fopen(fileName, "r");
     if(file == NULL){
         printf("File could not be opened!\n");
         return;
     }
-    int tempH, tempV;
-    int currentF = 0;
     //Loop for file reading
     while(1){
     	char lineHeader[128]; //Temp value assuming lines will not exceed 128 char length
@@ -34,14 +37,14 @@ void MapFrames::initFrames(char *fileName)
         		   //else we move into the parser
 
         if ( strcmp( lineHeader, "i" ) == 0){
-        	fscanf(file, "%d\n", frameCount);
-        	frames = new AdjacencyMatrix[frameCount];
-        }else if (strcmp( lineHeader, "p") == 0){
-        	fscanf(file, "%d %d\n", tempH, tempV);
-        	frames[currentF].adjPop(tempH, tempV);
-        	frames[currentF].adjPop(tempV, tempH);
-        }else if(strcmp( lineHeader, "f" ) == 0){
-        	fscanf(file, "%d\n", currentF);
+        	fscanf(file, "%f\n", &frameCount);
+        	frames = new AdjacencyMatrix[(int)frameCount];
+        }else if (strcmp( lineHeader, "p" ) == 0){
+        	fscanf(file, "%f %f\n", &tempH, &tempV);
+        	frames[(int)currentF].adjPop((int)tempH, (int)tempV);
+            frames[(int)currentF].adjPop((int)tempV, (int)tempH);
+        }else if(strcmp( lineHeader, "v" ) == 0){
+        	fscanf(file, "%f\n", currentF);
         }
 
     }
