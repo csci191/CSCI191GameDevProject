@@ -1,6 +1,6 @@
 #include "MapLoader.h"
 #include <TextureLoader.h>
-#include "MapFrames.h"
+
 
 MapLoader::MapLoader()
 {
@@ -90,7 +90,8 @@ void MapLoader::mapInit(char *FileName, char *SecondFile)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     bgTexture->loadTexture(FileName);
-    mp->initFrames(SecondFile);
+    mapFile = SecondFile;
+    mp->initFrames(mapFile, 0);
 }
 int MapLoader::objectPosition(float x, float y)
 {
