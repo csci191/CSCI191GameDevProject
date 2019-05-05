@@ -25,6 +25,7 @@ class MapLoader
 		float xD, yD;
 
 		MapFrames *mp = new MapFrames();
+		char *mapFile;
 	protected:
 	private:
 };
