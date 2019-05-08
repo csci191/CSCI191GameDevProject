@@ -34,7 +34,7 @@ void Inputs::keyEn(Parallax* plx, float speed)
 }
 */
 
-void Inputs::playerAction(Player* pl)
+void Inputs::playerAction(Player* pl, MapLoader* MP)
 {
      switch(wParam){
 
@@ -46,6 +46,11 @@ void Inputs::playerAction(Player* pl)
             //}
             pl->playActions("left");
 
+            //Block of code that detects collision with the map and reverts movements
+            MP->checkMapCollision( pl,"left");
+            MP->checkMapMovement(pl, "left");
+            //*************************************************************************
+
             break;
         case VK_RIGHT:
 
@@ -55,6 +60,11 @@ void Inputs::playerAction(Player* pl)
                // pl->xmin=temp;
             //}
             pl->playActions("right");
+
+            //Block of code that detects collision with the map and reverts movements
+            MP->checkMapCollision(pl, "right");
+            MP->checkMapMovement(pl, "right");
+            //******************************************************************************
             break;
         case VK_UP:
              //if(pl->actionTrigger=="Down"){
@@ -63,6 +73,12 @@ void Inputs::playerAction(Player* pl)
                 //pl->ymin=temp;
             //}
             pl->playActions("up");
+
+            //Block of code that detects collision with the map and reverts movements
+            MP->checkMapCollision(pl, "up");
+            MP->checkMapMovement(pl, "up");
+            //************************************************************************
+
             break;
         case VK_DOWN:
              //if(pl->actionTrigger=="Up"){
@@ -71,6 +87,11 @@ void Inputs::playerAction(Player* pl)
                 //pl->ymin=temp;
             //}
             pl->playActions("down");
+
+            //Block of code that detects collision with the map and reverts movements
+            MP->checkMapCollision(pl, "down");
+            MP->checkMapMovement(pl, "down");
+            //**********************************************************************
             break;
 
 
