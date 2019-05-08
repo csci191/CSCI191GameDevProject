@@ -61,7 +61,7 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
             break; //breaks if the end of file is reached
         		   //else we move into the parser
 
-        if ( strcmp( lineHeader, "f" ) == 0){
+        if ( strcmp( lineHeader, "f" ) == 0){		//f is the frame number
         	fscanf(file, "%f", &tempFrame);
         	if ((int)tempFrame == frame){
                 currentFrame = true;
@@ -70,15 +70,15 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
                 currentFrame = false;
         	}
         	//frames = (AdjacencyMatrix*)malloc(sizeof(int)*13);
-        }else if (strcmp( lineHeader, "p" ) == 0 && currentFrame == true){
+        }else if (strcmp( lineHeader, "p" ) == 0 && currentFrame == true){ //p is for popping connections from the matrix
         	fscanf(file, "%f %f\n", &tempH, &tempV);
         	adjPop((int)tempH, (int)tempV);
             adjPop((int)tempV, (int)tempH);
-        } else if ( strcmp( lineHeader, "v" ) == 0){
+        } else if ( strcmp( lineHeader, "v" ) == 0){                      //v is for defining frame to frame connections
             fscanf(file, "%f %f\n", &tempH, &tempV);
             frameConnections[tempH][tempV] = 1;
             frameConnections[tempV][tempH] = 1;
-        }else if (strcmp( lineHeader, "dl") == 0 && currentFrame == true){
+        }else if (strcmp( lineHeader, "dl") == 0 && currentFrame == true){ //dl = left Door dr = right Door du = top Door etc...
             fscanf(file, "%f %f\n", &tempH, &tempV);
             doorList[frame][0] = (int)tempH;
             doorList[frame][1] = (int)tempV;
