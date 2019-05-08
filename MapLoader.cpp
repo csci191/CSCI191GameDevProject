@@ -133,7 +133,9 @@ void MapLoader::checkMapMovement(Player* Ply, std::string direction)
         {
         if(Ply->position.x >= 1.3){
             if ( (mp->frame+1) < 36 ){
-                    if (mp->frameConnections[mp->frame][mp->frame+1] == 1)
+                    if (mp->frameConnections[mp->frame][mp->frame+1] == 1 &&
+                       (Ply->prevPosition >= mp->doorList[mp->frame][2] && Ply->prevPosition <= mp->doorList[mp->frame][3])
+                        )
                     {
                         Ply->position.x = -1.65;
                         mapMovement("right");
@@ -142,15 +144,17 @@ void MapLoader::checkMapMovement(Player* Ply, std::string direction)
                         Ply->prevPosition = Ply->currentPosition;
 
                     }else {
-                    Ply->position.x = 1.25;
+                    Ply->position.x = 1.29;
                     }
             }else {
-                Ply->position.x = 1.25;
+                Ply->position.x = 1.29;
             }
 
         }else{
             if ( (mp->frame -1) >= 0){
-                if (mp->frameConnections[mp->frame][mp->frame - 1] == 1){
+                if (mp->frameConnections[mp->frame][mp->frame - 1] == 1 &&
+                    (Ply->prevPosition >= mp->doorList[mp->frame][0] && Ply->prevPosition <= mp->doorList[mp->frame][1])
+                    ){
                     Ply->position.x = 1.25;
                     mapMovement("left");
                     mp->initFrames(mapFile, mp->frame - 1);
@@ -167,13 +171,14 @@ void MapLoader::checkMapMovement(Player* Ply, std::string direction)
         }
 //============================================================
 
-        std::cout << Ply->position.y << std::endl;
         if(Ply->position.y >= 0.76 || Ply->position.y <= -0.9)
         {
 
             if(Ply->position.y >= 0.76){
                     if ( (mp->frame - 4) >= 0 ){
-                        if(mp->frameConnections[mp->frame][mp->frame - 4] == 1){
+                        if(mp->frameConnections[mp->frame][mp->frame - 4] == 1 &&
+                           (Ply->currentPosition >= mp->doorList[mp->frame][4] && Ply->currentPosition <= mp->doorList[mp->frame][5])
+                           ){
                             Ply->position.y = -0.85;
                             mapMovement("up");
                             mp->initFrames(mapFile, mp->frame - 4);
@@ -188,7 +193,9 @@ void MapLoader::checkMapMovement(Player* Ply, std::string direction)
 
             }else{
                 if ( (mp->frame + 4) < 36 ){
-                    if ( (mp->frameConnections[mp->frame][mp->frame + 4]) == 1){
+                    if ( (mp->frameConnections[mp->frame][mp->frame + 4]) == 1 &&
+                        (Ply->prevPosition >= mp->doorList[mp->frame][6] && Ply->prevPosition <= mp->doorList[mp->frame][7])
+                        ){
                         Ply->position.y = 0.71;
                         mapMovement("down");
                         mp->initFrames(mapFile, mp->frame + 4);
