@@ -30,6 +30,8 @@ class MapFrames
 
         std::vector<std::vector<int> > adjMtrx;
         std::vector<std::vector<int> > frameConnections;
+        std::vector<std::vector<int> > doorList;//Door list contains a range of numbers for determining where the doors
+                                                //are. The range is contained as leftMin leftMax, right, up, down
 
         int frame;
 
