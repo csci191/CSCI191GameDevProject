@@ -12,6 +12,15 @@ MapLoader::MapLoader()
     moveIncrementY = 0.001;
     xD = xMax - xMin;
     yD = yMax - yMin;
+    int tempf = 0;
+    for (int i = 0; i < 6; i ++){
+        for (int j = 0; j < 6; j++){
+            frameNumbers[i][j] = tempf;
+            tempf++;
+        }
+
+    }
+
 }
 
 MapLoader::MapLoader(float yMinCoor,float xMinCoor,float  yMaxCoor, float xMaxCoor,float xinc, float yinc)
@@ -117,3 +126,128 @@ int MapLoader::objectPosition(float x, float y)
     }
     return yP + xP;
 }
+
+void MapLoader::checkMapMovement(Player* Ply, std::string direction)
+{
+        if (Ply->position.x >= 1.3 || Ply->position.x<=-1.7)
+        {
+        if(Ply->position.x >= 1.3){
+            if ( (mp->frame+1) < 36 ){
+                    if (mp->frameConnections[mp->frame][mp->frame+1] == 1)
+                    {
+                        Ply->position.x = -1.65;
+                        mapMovement("right");
+                        mp->initFrames(mapFile, mp->frame + 1);
+                        Ply->currentPosition = objectPosition(Ply->position.x, Ply->position.y);
+                        Ply->prevPosition = Ply->currentPosition;
+
+                    }else {
+                    Ply->position.x = 1.25;
+                    }
+            }else {
+                Ply->position.x = 1.25;
+            }
+
+        }else{
+            if ( (mp->frame -1) >= 0){
+                if (mp->frameConnections[mp->frame][mp->frame - 1] == 1){
+                    Ply->position.x = 1.25;
+                    mapMovement("left");
+                    mp->initFrames(mapFile, mp->frame - 1);
+                    Ply->currentPosition = objectPosition(Ply->position.x, Ply->position.y);
+                    Ply->prevPosition = Ply->currentPosition;
+                }else {
+                    Ply->position.x = -1.69;
+                }
+            }else {
+                Ply->position.x = -1.69;
+            }
+
+        }
+        }
+//============================================================
+
+        std::cout << Ply->position.y << std::endl;
+        if(Ply->position.y >= 0.76 || Ply->position.y <= -0.9)
+        {
+
+            if(Ply->position.y >= 0.76){
+                    if ( (mp->frame - 4) >= 0 ){
+                        if(mp->frameConnections[mp->frame][mp->frame - 4] == 1){
+                            Ply->position.y = -0.85;
+                            mapMovement("up");
+                            mp->initFrames(mapFile, mp->frame - 4);
+                            Ply->currentPosition = objectPosition(Ply->position.x, Ply->position.y);
+                            Ply->prevPosition = Ply->currentPosition;
+                        }else {
+                            Ply->position.y = 0.759;
+                        }
+                    }else {
+                        Ply->position.y = 0.759;
+                    }
+
+            }else{
+                if ( (mp->frame + 4) < 36 ){
+                    if ( (mp->frameConnections[mp->frame][mp->frame + 4]) == 1){
+                        Ply->position.y = 0.71;
+                        mapMovement("down");
+                        mp->initFrames(mapFile, mp->frame + 4);
+                        Ply->currentPosition = objectPosition(Ply->position.x, Ply->position.y);
+                        Ply->prevPosition = Ply->currentPosition;
+                    }else {
+                        Ply->position.y = -0.88;
+                    }
+                }else {
+                    Ply->position.y = -0.88;
+                }
+
+            }
+        }
+
+}
+
+void MapLoader::checkMapCollision(Player* pl,  std::string direction)
+{
+    if (direction == "left"){
+        pl->currentPosition = objectPosition(pl->position.x, pl->position.y);
+            if ( pl->currentPosition != pl->prevPosition ){
+               if( mp->checkConnection(pl->currentPosition, pl->prevPosition) ){
+                    pl->prevPosition = pl->currentPosition;
+               }else {
+                    pl->position.x += .5/100 * pl->speed;
+                    pl->currentPosition = pl->prevPosition;
+               }
+            }
+    }else if(direction == "right"){
+        pl->currentPosition = objectPosition(pl->position.x, pl->position.y) ;
+            if ( pl->currentPosition != pl->prevPosition ){
+               if( mp->checkConnection(pl->currentPosition, pl->prevPosition) ){
+                    pl->prevPosition = pl->currentPosition;
+               }else {
+                    pl->position.x -= .5/100 * pl->speed;
+                    pl->currentPosition = pl->prevPosition;
+               }
+            }
+    }else if(direction == "up"){
+        pl->currentPosition = objectPosition(pl->position.x, pl->position.y) ;
+            if ( pl->currentPosition != pl->prevPosition ){
+               if( mp->checkConnection(pl->currentPosition, pl->prevPosition) ){
+                    pl->prevPosition = pl->currentPosition;
+               }else {
+                    pl->position.y -= .5/100 * pl->speed;
+                    pl->currentPosition = pl->prevPosition;
+               }
+            }
+    }else if(direction == "down"){
+         pl->currentPosition = objectPosition(pl->position.x, pl->position.y);
+            if ( pl->currentPosition != pl->prevPosition ){
+               if( mp->checkConnection(pl->currentPosition, pl->prevPosition) ){
+                    pl->prevPosition = pl->currentPosition;
+               }else {
+                    pl->position.y += .5/100 * pl->speed;
+                    pl->currentPosition = pl->prevPosition;
+               }
+            }
+    }
+}
+
