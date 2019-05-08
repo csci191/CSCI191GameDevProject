@@ -19,6 +19,14 @@ MapFrames::MapFrames()
         }
         frameConnections.push_back(t);
     }
+
+    for (int i = 0; i < 36; i ++){
+        std::vector<int> l;
+        for(int j = 0; j < 8; j++){
+            l.push_back(0);
+        }
+        doorList.push_back(l);
+    }
 }
 
 MapFrames::~MapFrames()
@@ -70,6 +78,22 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
             fscanf(file, "%f %f\n", &tempH, &tempV);
             frameConnections[tempH][tempV] = 1;
             frameConnections[tempV][tempH] = 1;
+        }else if (strcmp( lineHeader, "dl") == 0 && currentFrame == true){
+            fscanf(file, "%f %f\n", &tempH, &tempV);
+            doorList[frame][0] = (int)tempH;
+            doorList[frame][1] = (int)tempV;
+        }else if (strcmp( lineHeader, "dr") == 0 && currentFrame == true){
+            fscanf(file, "%f %f\n", &tempH, &tempV);
+            doorList[frame][2] = (int)tempH;
+            doorList[frame][3] = (int)tempV;
+        }else if (strcmp( lineHeader, "du") == 0 && currentFrame == true){
+            fscanf(file, "%f %f\n", &tempH, &tempV);
+            doorList[frame][4] = (int)tempH;
+            doorList[frame][5] = (int)tempV;
+        }else if (strcmp( lineHeader, "dd") == 0 && currentFrame == true){
+            fscanf(file, "%f %f\n", &tempH, &tempV);
+            doorList[frame][6] = (int)tempH;
+            doorList[frame][7] = (int)tempV;
         }
 
     }
