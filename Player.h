@@ -23,7 +23,8 @@ class Player
 
         float xmin, ymin, xmax, ymax;
         int speed;
-
+        int currentPosition;
+        int prevPosition;
         std::string actionTrigger;
 
     protected:
