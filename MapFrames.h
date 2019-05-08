@@ -11,7 +11,7 @@
 class MapFrames
 {
     private:
-        int frame;
+
         int R = 100;
         int C = 100;
     public:
@@ -26,8 +26,12 @@ class MapFrames
         void createClearMap();
         bool checkConnection(int, int);
         void printMtrx();
+        int checkFrame();
 
         std::vector<std::vector<int> > adjMtrx;
+        std::vector<std::vector<int> > frameConnections;
+
+        int frame;
 
     protected:
 
