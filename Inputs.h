@@ -3,6 +3,7 @@
 #include<windows.h>
 //#include<Model.h>
 //#include<Parallax.h>
+#include <MapLoader.h>
 #include<Player.h>
 #include<GLScene.h>
 
@@ -20,7 +21,7 @@ class Inputs
         float keyArrow(float);
       void Menu(GLScene*, float);
 
-        void playerAction(Player*);
+        void playerAction(Player*, MapLoader*);
 
 
         double prev_mouse_X;
