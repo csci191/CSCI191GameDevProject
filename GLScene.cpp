@@ -91,6 +91,9 @@ GLint GLScene::initGL()
     arrow->objectTex = AT->tex;
     arrow->position.y = -.2;
     EChar->enemyInit();
+
+    Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
+    Ply->prevPosition = Ply->currentPosition;
 }
 
 GLint GLScene::drawScene()
@@ -167,6 +170,7 @@ GLint GLScene::drawScene()
 
     glPushMatrix();
     Ply->drawPlayer();
+
     glPopMatrix();
 
     glPushMatrix();
@@ -195,30 +199,7 @@ GLint GLScene::drawScene()
     EChar->yPos += EChar->yMove;
     glPopMatrix();
 
-    if (Ply->position.x >= 1.3 || Ply->position.x<=-1.7)
-    {
-        if(Ply->position.x >= 1.3){
-            //Ply->position.x = -1.65;
-            //Map1->mapMovement("right");
-            EChar->isEnemyLive = false;
-        }else{
-            //Ply->position.x = 1.25;
-            //Map1->mapMovement("left");
-            //EChar->isEnemyLive = false;
-        }
-    }
-    if(Ply->position.y >= 0.76 || Ply->position.y <= -0.9)
-    {
-        if(Ply->position.y > 0.76){
-            //Ply->position.y = -0.85;
-            //Map1->mapMovement("up");
-            EChar->isEnemyLive = false;
-        }else{
-            //Ply->position.y = 0.71;
-            //Map1->mapMovement("down");
-            EChar->isEnemyLive = false;
-        }
-    }
+
     }
 }
 GLvoid GLScene::resizeGLScene(GLsizei width, GLsizei height)
@@ -242,7 +223,7 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
              if(!mainMenu && !startMenu)
             {
                 //KbMs ->keyPressed(mdl);
-                if(!pause){keyB ->playerAction(Ply);}
+                if(!pause){keyB ->playerAction(Ply, Map1);}
             }
             if(mainMenu)
             {
