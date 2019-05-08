@@ -93,7 +93,12 @@ void Inputs::playerAction(Player* pl, MapLoader* MP)
             MP->checkMapMovement(pl, "down");
             //**********************************************************************
             break;
-
+         case 'Z':
+            pl->playActions ("slash");
+            break;
+         case 'X':
+            pl->playActions ("shoot");
+            break;
 
         }
 }
