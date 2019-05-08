@@ -1,0 +1,96 @@
+void Player::drawArrow()
+{
+
+if(arrowStatus){
+   glColor3f(1.0,1.0,1.0);
+
+     if(T->GetTicks()>35)
+        {
+            if(arrowLoc.x>=-1.1 && arrowLoc.x<=1.1)
+                arrowLoc.x += t*arrXdir;
+            else arrowStatus = false;
+            if(arrowLoc.y>=-1.1 && arrowLoc.y<=1.1)
+                arrowLoc.y += t*arrYdir;
+            else arrowStatus = false;
+           T->Reset();
+        }
+    glTranslatef(arrowLoc.x ,arrowLoc.y,0.0);
+    glRotated(arrAngle,0,0,1);
+    glBindTexture(GL_TEXTURE_2D,arrowTex);
+    glScaled(1.0/(float)gridSize,1.0/(float)gridSize,1);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0,0);
+        glVertex3f(1,1,0.0f);
+
+        glTexCoord2f(1,0);
+        glVertex3f(-1,1,0.0f);
+
+        glTexCoord2f(1,1);
+        glVertex3f(-1,-1,0.0f);
+
+        glTexCoord2f(0,1);
+        glVertex3f(1,-1,0.0f);
+     glEnd();
+  }
+}
+
+void Player::shootArrow()
+{   if(livePlayer){
+    if(!arrowStatus)
+    {
+      arrowStatus=true;
+
+      if(strcmp(playerDir, "left")==0)
+      {
+        arrAngle = -90;
+        arrXdir=-1;
+        arrYdir=0;
+        arrowLoc.x = plyLoc.x-unitWidth/2;
+        arrowLoc.y = plyLoc.y;
+      }
+      if(strcmp(playerDir, "right")==0)
+      {
+        arrAngle =90;
+        arrXdir=1;
+        arrYdir=0;
+        arrowLoc.x = plyLoc.x+unitWidth/2;
+        arrowLoc.y = plyLoc.y;
+      }
+      if(strcmp(playerDir, "up")==0)
+      {
+        arrXdir=0;
+        arrYdir=1;
+        arrAngle =180;
+
+        arrowLoc.y = plyLoc.y+unitWidth/2;
+        arrowLoc.x = plyLoc.x;
+      }
+      if(strcmp(playerDir, "down")==0)
+      {
+        arrXdir=0;
+        arrYdir=-1;
+        arrAngle= 0;
+
+        arrowLoc.y = plyLoc.y-unitWidth/2;
+        arrowLoc.x = plyLoc.x;
+      }
+     }
+    }
+}
+
+
+void Player::loadArrowImage(char* fileName)
+{
+    arrowTex = TextureLoader(fileName);
+}
+
+GridLoc Player::getArrowLoc()
+{
+   GridLoc val;
+
+    val.x = (int)(ceil((arrowLoc.x +(1-unitWidth))/unitWidth));
+    val.y = (int)(ceil((arrowLoc.y +(1-unitWidth))/unitWidth));
+
+   return val;
+}
