@@ -1,5 +1,6 @@
 #include "MapFrames.h"
 #include <math.h>
+#include <iostream>
 
 MapFrames::MapFrames()
 {
@@ -9,6 +10,14 @@ MapFrames::MapFrames()
             v.push_back(0);
         }
         adjMtrx.push_back(v);
+    }
+
+    for (int i = 0; i < 36; i++){
+        std::vector<int> t;
+        for (int j = 0; j < 36; j ++){
+            t.push_back(0);
+        }
+        frameConnections.push_back(t);
     }
 }
 
@@ -26,7 +35,7 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
     float tempV = 0;
     frame = searchFrame;
     bool currentFrame = false;
-    int tempFrame;
+    float tempFrame;
 
 	//File reading the C way
 	FILE * file = fopen(fileName, "r");
@@ -44,9 +53,9 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
             break; //breaks if the end of file is reached
         		   //else we move into the parser
 
-        if ( strcmp( lineHeader, "i" ) == 0){
-        	fscanf(file, "%f\n", &tempFrame);
-        	if (tempFrame == frame){
+        if ( strcmp( lineHeader, "f" ) == 0){
+        	fscanf(file, "%f", &tempFrame);
+        	if ((int)tempFrame == frame){
                 currentFrame = true;
         	}
         	else {
@@ -57,6 +66,10 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
         	fscanf(file, "%f %f\n", &tempH, &tempV);
         	adjPop((int)tempH, (int)tempV);
             adjPop((int)tempV, (int)tempH);
+        } else if ( strcmp( lineHeader, "v" ) == 0){
+            fscanf(file, "%f %f\n", &tempH, &tempV);
+            frameConnections[tempH][tempV] = 1;
+            frameConnections[tempV][tempH] = 1;
         }
 
     }
@@ -66,6 +79,7 @@ void MapFrames::adjPush(int h, int v)
 {
     if ( (h >= 0 && h < R) && (v >= 0 && v < C) ){
 		adjMtrx[h][v] = 1;
+		adjMtrx[v][h] = 1;
 	}
 }
 
@@ -73,6 +87,7 @@ void MapFrames::adjPop(int h, int v)
 {
     if ( (h >= 0 && h < R) && (v >= 0 && v < C) ){
 		adjMtrx[h][v] = 0;
+		adjMtrx[v][h] = 0;
 	}
 }
 
@@ -98,6 +113,9 @@ int temp = (int)sqrt(C);
 
 bool MapFrames::checkConnection(int h, int v)
 {
+    if ( (h - v) == 90 || (v - h) == 90){
+        return true;
+    }
     if ( (adjMtrx[h][v] == 1) || (adjMtrx[v][h] == 1) ){
         return true;
     }else {
@@ -114,5 +132,10 @@ void MapFrames::printMtrx()
         std::cout << std::endl;
     }
 
+}
+
+int MapFrames::checkFrame()
+{
+    return frame;
 }
 
