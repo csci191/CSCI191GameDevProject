@@ -136,3 +136,23 @@ float Inputs::keyArrow(float y)
     return y;
 }
 
+void Inputs::keyArroe2(objects* ob,bool menu)
+{
+     switch(wParam)
+    {
+        case VK_UP:
+            if(menu)ob->position.y = -.2;
+            else ob->position.y = 7;
+            break;
+        case VK_DOWN:
+            if(menu)ob->position.y = -6.4;
+            else ob->position.y = 3;
+            break;
+        case VK_RIGHT:
+            if((ob->position.y==7 || ob->position.y==3)) ob->position.x = 2;
+            break;
+        case VK_LEFT:
+            if((ob->position.y==7 || ob->position.y==3)) ob->position.x = -2;
+            break;
+    }
+}
