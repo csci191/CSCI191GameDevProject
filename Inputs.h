@@ -6,6 +6,7 @@
 #include <MapLoader.h>
 #include<Player.h>
 #include<GLScene.h>
+#include<objects.h>
 
 
 class Inputs
