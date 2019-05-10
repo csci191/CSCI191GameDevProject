@@ -23,6 +23,9 @@ class Player
 
         float xmin, ymin, xmax, ymax;
         int speed;
+        int health;
+        int mana;
+        
         int currentPosition;
         int prevPosition;
         std::string actionTrigger;
