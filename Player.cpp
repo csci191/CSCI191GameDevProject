@@ -36,6 +36,8 @@ Player::Player()
     position.z = 0;
 
     speed = 5;
+    health = 3;
+    mana=6;
 }
 
 Player::~Player()
