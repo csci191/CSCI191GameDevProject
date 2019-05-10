@@ -2,7 +2,7 @@
 #include <MapLoader.h>
 #include <Player.h>
 #include <Inputs.h>
-#include <TextureLoader.h>
+#include <textureLoader.h>
 #include <Parallax.h>
 #include <objects.h>
 #include <EnemyChar.h>
@@ -14,33 +14,33 @@ Player *Ply = new Player();
 Inputs *keyB = new Inputs();
 EnemyChar *EChar = new EnemyChar();
 /*     Enemy Texture     */
-TextureLoader *ETex = new TextureLoader();
+textureLoader *ETex = new textureLoader();
 float tempx, tempy;
 
 /* START MENU'S TEXTURE AND OBJECTS */
 objects* StartObjects = new objects();           // STARTMENU MAIN LOGO OBJECT
 objects* StartObjects1 = new objects();          // STARTMENU CONTROL OJBECT
 Parallax* StartPara = new Parallax();            // STARTMENU PARALLAX
-TextureLoader* StartLogo = new TextureLoader();
-TextureLoader* StartBG = new TextureLoader();
-TextureLoader* StartPress = new TextureLoader();
+textureLoader* StartLogo = new textureLoader();
+textureLoader* StartBG = new textureLoader();
+textureLoader* StartPress = new textureLoader();
 
 /* MAIN MENU'S TEXTURE AND OBJECTS */
 objects MMObjects[3];
 Parallax* MMPara = new Parallax();
-TextureLoader* MMStart = new TextureLoader();
-TextureLoader* MMOption = new TextureLoader();
-TextureLoader* MMQuit = new TextureLoader();
-TextureLoader* MMBG = new TextureLoader();
+textureLoader* MMStart = new textureLoader();
+textureLoader* MMOption = new textureLoader();
+textureLoader* MMQuit = new textureLoader();
+textureLoader* MMBG = new textureLoader();
 
 /* MAIN GAME'S TEXTURE AND OBJECTS */
-TextureLoader* RQTex = new TextureLoader();    // TEXTURE FOR OPTION WINDOW
+textureLoader* RQTex = new textureLoader();    // TEXTURE FOR OPTION WINDOW
 objects* RQ = new objects();                   // OBJECT FOR OPTION WINDOW
 Parallax* GamePara = new Parallax();           // PARALLAX FOR GAME
 
 /* ARROW CURSOR */
 objects* arrow = new objects();            // ARROW OBJECT
-TextureLoader* AT = new TextureLoader();   // ARROW TEXTURE
+textureLoader* AT = new textureLoader();   // ARROW TEXTURE
 
 /*PLAYER HUD*/
 textureLoader HealthTex[2];
@@ -102,7 +102,7 @@ GLint GLScene::initGL()
     arrow->objectTex = AT->tex;
     arrow->position.y = -.2;
     EChar->enemyInit();
-	
+
     /*PLAYER HUD*/
     HealthTex[0].loadTexture("images/FULLHEALTH.png");
     HealthTex[1].loadTexture("images/NOHEALTH.png");
@@ -120,7 +120,7 @@ GLint GLScene::initGL()
     PlayerMana[5].objectTex = ManaTex[1].tex;
 
     attackTex->loadTexture("images/attack.png");
-    attackAnim->tex = attackTex->tex;	
+    attackAnim->tex = attackTex->tex;
 
     Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
     Ply->prevPosition = Ply->currentPosition;
@@ -159,6 +159,12 @@ GLint GLScene::drawScene()
         MMPara->drawSquare(screenWidth,screenHeight);
         glPopMatrix();
 
+        if(arrow->position.y > 1)
+        {
+            arrow->position.y = -.2;
+            arrow->position.x = -6.4;
+        }
+
         glPushMatrix();
         glScaled(.05,.05,1);
         glTranslated(2.5,arrow->position.y,-1);
@@ -183,25 +189,26 @@ GLint GLScene::drawScene()
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
-    glScaled(3.33,3.33,1.0);
     glPushMatrix();
+     glScaled(3.33,3.33,1.0);
     Map1->drawBG(screenWidth, screenHeight);
-    glPushMatrix();
+    glPopMatrix();
 
-    updateUI();	    
-	    
+    updateUI();
+
     glPushMatrix();
     glScaled(3.33,3.33,1.0);
     Ply->drawPlayer();
     glPopMatrix();
 
     /* ATTACKS */
+    if(!pause){
     glPushMatrix();
     glScaled(.5,.5,1.0);
     glTranslated(.1,.1,-2);
     attackAnim->animDraw();
-    glPopMatrix();	    
-	    
+    glPopMatrix(); }
+
     glPushMatrix();
     if(EChar->xPos < -0.1)
     {
@@ -242,15 +249,17 @@ GLint GLScene::drawScene()
             RQ->drawObj();
             glPopMatrix();
             glEnd();
-        }	   
-	    
+        }
+
+    glPushMatrix();
     glScaled(3.33,3.33,1.0);
-    EChar->drawEnemy();	    
-    if(!pause){	 
+    EChar->drawEnemy();
+    if(!pause){
     EChar->enemyActions();
     EChar->xPos += EChar->xMove;
     EChar->yPos += EChar->yMove;
-    glPopMatrix(); }
+    glPopMatrix();
+    }
 
 
     }
