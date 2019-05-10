@@ -20,7 +20,7 @@ class Inputs
 
         float keyArrow(float);
       void Menu(GLScene*, float);
-
+        void keyArroe2(objects*,bool);
         void playerAction(Player*, MapLoader*);
 
 
