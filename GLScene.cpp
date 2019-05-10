@@ -6,6 +6,8 @@
 #include <Parallax.h>
 #include <objects.h>
 #include <EnemyChar.h>
+#include<ANIMATOR.H>
+
 
 MapLoader *Map1 = new MapLoader(0.0244, 0.0435,0.1463,0.2609,0.2174,0.1219); //yMin, xMin, yMax, xMax, xInc,yInc
 Player *Ply = new Player();
@@ -39,6 +41,15 @@ Parallax* GamePara = new Parallax();           // PARALLAX FOR GAME
 /* ARROW CURSOR */
 objects* arrow = new objects();            // ARROW OBJECT
 TextureLoader* AT = new TextureLoader();   // ARROW TEXTURE
+
+/*PLAYER HUD*/
+textureLoader HealthTex[2];
+objects PlayerHealth[3];
+textureLoader ManaTex[2];
+objects PlayerMana[6];
+textureLoader* attackTex = new textureLoader();
+Animator* attackAnim = new Animator();
+objects* plyAnim = new objects();
 
 GLScene::GLScene()
 {
@@ -79,7 +90,7 @@ GLint GLScene::initGL()
 
     /* INITIALIZE FOR GAME */
     Map1->mapInit("images/Maps/Map1.png", "mapData/Map1.txt");
-    RQTex->loadTexture("images/RQ.png");
+    RQTex->loadTexture("images/inventory.png");
     GamePara->paraTex = Map1->bgTexture->tex;              // LOAD PARLLAX
     RQ->objectTex = RQTex->tex;
 
@@ -91,6 +102,25 @@ GLint GLScene::initGL()
     arrow->objectTex = AT->tex;
     arrow->position.y = -.2;
     EChar->enemyInit();
+	
+    /*PLAYER HUD*/
+    HealthTex[0].loadTexture("images/FULLHEALTH.png");
+    HealthTex[1].loadTexture("images/NOHEALTH.png");
+    PlayerHealth[0].objectTex = HealthTex[1].tex;
+    PlayerHealth[1].objectTex = HealthTex[1].tex;
+    PlayerHealth[2].objectTex = HealthTex[1].tex;
+
+    ManaTex[0].loadTexture("images/MANAFULL.png");
+    ManaTex[1].loadTexture("images/MANAEMPTY.png");
+    PlayerMana[0].objectTex = ManaTex[1].tex;
+    PlayerMana[1].objectTex = ManaTex[1].tex;
+    PlayerMana[2].objectTex = ManaTex[1].tex;
+    PlayerMana[3].objectTex = ManaTex[1].tex;
+    PlayerMana[4].objectTex = ManaTex[1].tex;
+    PlayerMana[5].objectTex = ManaTex[1].tex;
+
+    attackTex->loadTexture("images/attack.png");
+    attackAnim->tex = attackTex->tex;	
 
     Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
     Ply->prevPosition = Ply->currentPosition;
@@ -153,26 +183,25 @@ GLint GLScene::drawScene()
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
-        if(pause) // POPUP WINDOW FOR QUITTING
-        {
-            glPushMatrix();
-            glScaled(.2,.2,1);
-            glTranslated(0,0,-1);
-            RQ->drawObj();
-            glPopMatrix();
-        }
-
     glScaled(3.33,3.33,1.0);
-
     glPushMatrix();
     Map1->drawBG(screenWidth, screenHeight);
     glPushMatrix();
 
+    updateUI();	    
+	    
     glPushMatrix();
+    glScaled(3.33,3.33,1.0);
     Ply->drawPlayer();
-
     glPopMatrix();
 
+    /* ATTACKS */
+    glPushMatrix();
+    glScaled(.5,.5,1.0);
+    glTranslated(.1,.1,-2);
+    attackAnim->animDraw();
+    glPopMatrix();	    
+	    
     glPushMatrix();
     if(EChar->xPos < -0.1)
     {
@@ -193,15 +222,79 @@ GLint GLScene::drawScene()
         EChar->actionEnemy = 3;
     }
 
-    EChar->drawEnemy();
+    if(pause) // POPUP WINDOW FOR QUITTING
+        {
+            if(arrow->position.y < 1)
+            {
+                arrow->position.y = 7;
+                arrow->position.x = -2;
+            }
+
+            glPushMatrix();
+            glScaled(.05,.05,1);
+            glTranslated(arrow->position.x,arrow->position.y,-1);
+            arrow->drawObj();
+            glPopMatrix();
+
+            glPushMatrix();
+            glScaled(.5,.5,1);
+            glTranslated(-.5,0,-1);
+            RQ->drawObj();
+            glPopMatrix();
+            glEnd();
+        }	   
+	    
+    glScaled(3.33,3.33,1.0);
+    EChar->drawEnemy();	    
+    if(!pause){	 
     EChar->enemyActions();
     EChar->xPos += EChar->xMove;
     EChar->yPos += EChar->yMove;
-    glPopMatrix();
+    glPopMatrix(); }
 
 
     }
 }
+
+void GLScene::updateUI()
+{
+    std::cout << Ply->health << std::endl;
+    /* DISPLAY HEALTH */
+    for(int a=0; a<3; a++)
+    {
+        glPushMatrix();
+        glScaled(.05,.05,1.0);
+        glTranslated(-15+a,7,-1);
+        PlayerHealth[a].drawObj();
+        //std::cout << PlayerHealth[a].objectTex << std::endl;
+        glPopMatrix();
+    }
+
+    /* UPDATE HEALTH */
+    for(int b=0; b<Ply->health;b++)
+    {
+        std::cout << PlayerHealth[b].objectTex << " " << HealthTex[0].tex<<std::endl;
+        PlayerHealth[b].objectTex = HealthTex[0].tex;
+    }
+
+    /* DISPLAY MANA */
+    for(int i=0;i<6; i++)
+    {
+        glPushMatrix();
+        glScaled(.05,.05,1.0);
+        glTranslated(-15+i,6,-1);
+        PlayerMana[i].drawObj();
+        glPopMatrix();
+    }
+
+    /* UPDATE MANA */
+    for(int j=0; j<Ply->mana; j++)
+    {
+        PlayerMana[j].objectTex = ManaTex[0].tex;
+    }
+}
+
+
 GLvoid GLScene::resizeGLScene(GLsizei width, GLsizei height)
 {
     GLfloat aspectRatio = (GLfloat)width/(GLfloat)height;
@@ -225,9 +318,10 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 //KbMs ->keyPressed(mdl);
                 if(!pause){keyB ->playerAction(Ply, Map1);}
             }
-            if(mainMenu)
+            if(mainMenu || pause)
             {
-                arrow->position.y = keyB->keyArrow(arrow->position.y);
+                //arrow->position.y = keyB->keyArrow(arrow->position.y);
+		keyB->keyArroe2(arrow, mainMenu);
             }
             keyB->Menu(this,arrow->position.y);
 	    break;
