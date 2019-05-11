@@ -29,8 +29,8 @@ Animator::Animator()
     xmax=1;
     ymax=1;
 
-    show = true;
-    animInit();
+    show = false;
+    //animInit();
 }
 
 Animator::~Animator()
@@ -38,21 +38,22 @@ Animator::~Animator()
     //dtor
 }
 
-void Animator::animInit()
+void Animator::animInit(float xMin, float xMax, float yMin, float yMax)
 {
     /* First frame in sprite sheet*/
-    xmin=(float)3/6;
-    xmax=(float)4/6;
+    xmin=xMin;
+    xmax=xMax;
 
-    ymin=0;
-    ymax=(float)1/4;
+    ymin=yMin;
+    ymax=yMax;
 }
 
 void Animator::animDraw()
 {
-        if(show){
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glBegin(GL_QUADS);
+    if(show)
+    {
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glBegin(GL_QUADS);
         glTexCoord2f(xmin,ymax);
         glVertex3f(verticies[0].x,verticies[0].y,verticies[0].z);
 
@@ -64,22 +65,27 @@ void Animator::animDraw()
 
         glTexCoord2f(xmin,ymin);
         glVertex3f(verticies[3].x,verticies[3].y,verticies[3].z);
-    glEnd();
+        glEnd();
     }
-    playAnimation();
+    //playAnimation();
 }
 
 void Animator::playAnimation()
 {
-    if(animTimer->getTickets() > 10)
+    if(play ==true)
     {
-        xmin +=(float)1/6;
-        xmax +=(float)1/6;
-        if(xmax >=1)
+        if(animTimer->getTickets() > 10)
         {
-            xmax = (float)2/6;
-            xmin = (float)1/6;
+            xmin +=(float)1/6;
+            xmax +=(float)1/6;
+            if(xmax >=1)
+            {
+                xmax = (float)2/6;
+                xmin = (float)1/6;
+                play=false;
+                show = false;
+            }
+            animTimer->reset();
         }
-        animTimer->reset();
     }
 }
