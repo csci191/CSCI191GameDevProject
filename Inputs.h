@@ -7,38 +7,37 @@
 #include<Player.h>
 #include<GLScene.h>
 #include<objects.h>
-
+#include <ANIMATOR.H>
 
 class Inputs
 {
-    public:
-        Inputs();
-        virtual ~Inputs();
+public:
+    Inputs();
+    virtual ~Inputs();
 
 
 
 //         void keyEn(Parallax*, float); // move parallax
 
-        float keyArrow(float);
-      void Menu(GLScene*, float);
-        void keyArroe2(objects*,bool);
-        void playerAction(Player*, MapLoader*);
+    float keyArrow(float);
+    void Menu(GLScene*, float);
+    void keyArroe2(objects*,bool);
+    void playerAction(Player*, MapLoader*);
+
+    double prev_mouse_X;
+    double prev_mouse_Y;
+
+    bool mouse_Translate;
+    bool mouse_Rotate;
+
+    WPARAM wParam;
 
 
-        double prev_mouse_X;
-        double prev_mouse_Y;
-
-        bool mouse_Translate;
-        bool mouse_Rotate;
-
-        WPARAM wParam;
 
 
+protected:
 
-
-    protected:
-
-    private:
+private:
 };
 
 #endif // INPUTS_H
