@@ -1,27 +1,29 @@
 #ifndef GLSCENE_H
 #define GLSCENE_H
-
-#include <string.h>
 #include<windows.h>
 #include<GL/glut.h>
+#include<string.h>
+
 class GLScene
 {
+    glutGet();
     public:
-        GLScene();
+        GLScene(); //constructor
         virtual ~GLScene();
-        GLint initGL();
+
+        GLint initGL();//fixed size of int, cross platform
         GLint drawScene();
         GLvoid resizeGLScene(GLsizei, GLsizei);
 
-        int winMsg(HWND, UINT, WPARAM, LPARAM);
-        float screenWidth;
-        float screenHeight;
         bool pause = false;
         bool startMenu = true;
         bool mainMenu = false;
         bool exitGame = false;
 
-        WPARAM wParam;
+        int winMsg(HWND,UINT,WPARAM,LPARAM);
+        float screenWidth, screenHeight;
+        void updateUI(bool, int);
+        void UI();
 
     protected:
 
