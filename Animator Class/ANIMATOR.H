@@ -21,7 +21,7 @@ class Animator
         float xmin, ymin, xmax, ymax;
 
         GLuint tex;
-        void animInit();
+        void animInit(float, float, float, float);
         void animDraw();
         void playAnimation();
 
