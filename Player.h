@@ -23,8 +23,8 @@ class Player
 
         float xmin, ymin, xmax, ymax;
         int speed;
-        int health;
-        int mana;
+        int health, mana;
+        int maxHealth, maxMana;
         
         int currentPosition;
         int prevPosition;
