@@ -20,7 +20,7 @@ public:
 //         void keyEn(Parallax*, float); // move parallax
 
     float keyArrow(float);
-    void Menu(GLScene*, float);
+    void Menu(GLScene*, float, float, Player* p=NULL);
     void keyArroe2(objects*,bool);
     void playerAction(Player*, MapLoader*);
 
