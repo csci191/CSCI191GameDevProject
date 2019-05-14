@@ -101,6 +101,35 @@ void Inputs::Menu(GLScene* g, float arrow)
             g->startMenu = false;
             g->mainMenu = true;
         }
+        if(g->pause)
+        {
+            if(arrowX==-2 && arrowY==7)
+            {
+                if(p->health != p->maxHealth)
+                {
+                    p->health += 1;
+                    g->updateUI(true, true, p->health);
+                }
+            }
+            if(arrowX==-2 && arrowY==3)
+            {
+                if(p->mana != p->maxMana)
+                {
+                    p->mana += 1;
+                    g->updateUI(false, true, p->mana);
+                }
+            }
+            if(arrowX==2 && arrowY==7)
+            {
+                if(p->maxHealth < 12)
+                {
+                    p->maxHealth += 1;
+                    p->health = p->maxHealth;
+                    g->UI(p->maxHealth);
+                }
+            }
+        }
+            
         break;
     case VK_ESCAPE:
         if(!g->pause && !g->startMenu && !g->mainMenu)
