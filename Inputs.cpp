@@ -83,7 +83,7 @@ void Inputs::playerAction(Player* pl, MapLoader* MP)
     }
 }
 
-void Inputs::Menu(GLScene* g, float arrow)
+void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
 {
     switch(wParam)
     {
