@@ -7,6 +7,7 @@
 #include <objects.h>
 #include <EnemyChar.h>
 #include<ANIMATOR.H>
+#include<sounds.h>
 
 #include<iostream>
 #include<string.h>
@@ -60,6 +61,13 @@ Animator* attackAnim = new Animator();
 textureLoader* fireballTex = new textureLoader();
 objects* fireball = new objects();
 
+/* Sounds */
+sounds* gameSound = new sounds();
+
+/* Items */
+textureLoader* HealthPotionTex = new textureLoader();
+objects* HealthPotion = new objects();
+
 GLScene::GLScene()
 {
     //ctor
@@ -104,36 +112,21 @@ GLint GLScene::initGL()
     RQ->objectTex = RQTex->tex;
 
     Ply->playerInit("images/pix.png");             // INITIALIZE TEXTURE FOR PLAYER
+    
     ETex->loadTexture("images/enemy.png");                  //Enemy texture
     EChar->enemyTex = ETex->tex;
+    EChar->enemyInit();
 
     AT->loadTexture("images/arrow.png");
     arrow->objectTex = AT->tex;
     arrow->position.y = -.2;
-    EChar->enemyInit();
 
     /*PLAYER HUD*/
     /* HEALTH */
     HealthTex[0].loadTexture("images/health.png");
-    for(int i=0; i<3; i++)
-    {
-        PlayerHealth[i].tex = HealthTex->tex;
-        PlayerHealth[i].xmin = 0.0;
-        PlayerHealth[i].xmax = 0.5;
-        PlayerHealth[i].show = true;
-        PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
-    }
 
     /* MANA */
     ManaTex->loadTexture("images/mana.png");
-    for(int j=0; j<6; j++)
-    {
-        PlayerMana[j].tex = ManaTex->tex;
-        PlayerMana[j].xmin = 0.5;
-        PlayerMana[j].xmax = 1.0;
-        PlayerMana[j].show = true;
-        PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
-    }
 
     /* ATTACK */
     attackAnim->animInit((float)3/6, (float)4/6, (float)1/4, (float)2/4);
@@ -144,18 +137,48 @@ GLint GLScene::initGL()
     fireballTex->loadTexture("images/fireball.png");
     fireball->objectTex = fireballTex->tex;
     fireball->show = false;
+    
+    /* HEALTH POTION */
+    HealthPotionTex->loadTexture("images/PotionG.png");
+    HealthPotion->objectTex = HealthPotionTex->tex;
 
+    /* Sets Music */
+    gameSound->setMusic("snds/music/MainMenu.ogg", false, 0);  // MUSIC 1
+    gameSound->setMusicVolume(.5,0);
+
+    gameSound->setMusic("snds/music/StartMenu.ogg", false, 1); // MUSIC 2
+    gameSound->setMusicVolume(.5,1);
+
+    gameSound->setMusic("snds/music/game.ogg",false,2);
+    gameSound->setMusicVolume(.5,2);
+
+    gameSound->setSFX("snds/attack.MP3", 0);                   // SFX 1
+    gameSound->setSFXVolume(.5,0);
+    
     Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
     Ply->prevPosition = Ply->currentPosition;
 }
 
 GLint GLScene::drawScene()
 {
+    SoundUpdate(); // CHECKS FOR WHICH MUSIC TO PLAY
+
+    if(!startMenu && !mainMenu)
+        mainGame =true;
+    else
+        mainGame = false;
+    
     if(startMenu) // RENDERS STARTMENU
     {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
+        /* PLAYS MUSIC */
+        if(gameSound->music[0]->getIsPaused())
+        {
+            gameSound->playMusic(0);
+        }
+        
         /* BACKGROUND */
         glPushMatrix();
         StartPara->drawSquare(screenWidth,screenHeight);
@@ -178,6 +201,12 @@ GLint GLScene::drawScene()
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
+         /* PLAYS MUSIC */
+        if(gameSound->music[1]->getIsPaused())
+        {
+            gameSound->playMusic(1);
+        }
+        
         glPushMatrix();
         MMPara->drawSquare(screenWidth,screenHeight);
         glPopMatrix();
@@ -207,11 +236,11 @@ GLint GLScene::drawScene()
         MMObjects[1].drawObj();
         glPopMatrix();
 
-        /* RESETS HEALTH AND MANA */
-        Ply->health = 3;
-        Ply->mana = 6;
+        /* SETS HEALTH AND MANA */
+        Ply->health = Ply->maxHealth;
+        Ply->mana = Ply->maxMana;
 
-        for(int i=0; i<3; i++)
+        for(int i=0; i<12; i++)
         {
             PlayerHealth[i].tex = HealthTex->tex;
             PlayerHealth[i].xmin = 0.0;
@@ -220,7 +249,7 @@ GLint GLScene::drawScene()
             PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
         }
 
-        for(int j=0; j<6; j++)
+        for(int j=0; j<12; j++)
         {
             PlayerMana[j].tex = ManaTex->tex;
             PlayerMana[j].xmin = 0.5;
@@ -235,7 +264,11 @@ GLint GLScene::drawScene()
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
-        std::cout << Ply->mana << std::endl;
+         /* PLAYS MUSIC */
+        if(gameSound->music[2]->getIsPaused())
+        {
+            gameSound->playMusic(2);
+        }
 
         /* DRAWS BAGGROUND */
         glPushMatrix();
@@ -244,8 +277,10 @@ GLint GLScene::drawScene()
         glPopMatrix();
 
         /* DRAWS HUD*/
-        updateUI(true, Ply->health);
-        updateUI(false, Ply->mana);
+        if(Ply->health < Ply->maxHealth)
+            updateUI(true, false,Ply->health);
+        if(Ply->mana < Ply->maxMana)
+            updateUI(false, false, Ply->mana);
         UI();
 
         /* DRAWS PLAYER */
@@ -254,7 +289,21 @@ GLint GLScene::drawScene()
         Ply->drawPlayer();
         glPopMatrix();
 
-        /* DRAWS ATTACKS */
+        /* DRAWS FIREBALL */
+        //std::cout << fireball->position.x << std::endl;
+        if(fireball->show)
+        {
+            glPushMatrix();
+            glScaled(.1,.1,1);
+            if(!pause)
+                fireball->moveObj(fireball->objDir);
+
+            glTranslated(fireball->position.x, fireball->position.y,-2);
+            fireball->drawObj();
+            glPopMatrix();
+        }
+        
+         /* DRAWS ATTACKS */
         if(attackAnim->show)
         {
             glPushMatrix();
@@ -267,21 +316,13 @@ GLint GLScene::drawScene()
             attackAnim->playAnimation();                                      // PLAYS THE ATTACK ANIMATION
             glPopMatrix();
         }
-
-        /* DRAWS FIREBALL */
-        if(fireball->show)
-        {
-            glPushMatrix();
-            glScaled(.1,.1,1);
-            if(!pause)
-                fireball->moveObj(fireball->objDir);
-
-            glTranslated(fireball->position.x, fireball->position.y,-2);
-            fireball->drawObj();
-            glPopMatrix();
-        }
-
-
+        /* DRAWS POTION */
+        glPushMatrix();
+        glScaled(.1,.1,1);
+        glTranslated(0,0,-1.3);
+        HealthPotion->drawObj();
+        glPopMatrix();
+        
         glPushMatrix();
         if(EChar->xPos < -0.1)
         {
@@ -304,28 +345,6 @@ GLint GLScene::drawScene()
             EChar->actionEnemy = 3;
         }
 
-        if(pause) // POPUP WINDOW FOR QUITTING
-        {
-            if(arrow->position.y < 1)
-            {
-                arrow->position.y = 7;
-                arrow->position.x = -2;
-            }
-
-            glPushMatrix();
-            glScaled(.05,.05,1);
-            glTranslated(arrow->position.x,arrow->position.y,-1);
-            arrow->drawObj();
-            glPopMatrix();
-
-            glPushMatrix();
-            glScaled(.5,.5,1);
-            glTranslated(-.5,0,-1);
-            RQ->drawObj();
-            glPopMatrix();
-            glEnd();
-        }
-
         glPushMatrix();
         glScaled(3.33,3.33,1.0);
         EChar->drawEnemy();
@@ -336,53 +355,145 @@ GLint GLScene::drawScene()
             EChar->yPos += EChar->yMove;
             glPopMatrix();
         }
+        
+        if(pause) // POPUP WINDOW FOR QUITTING
+        {
+            /* DRAWS INVENTORY BACKGROUND */
+            glPushMatrix();
+            glScaled(.5,.5,1);
+            glTranslated(-.5,0,-1.1);
+            RQ->drawObj();
+            glPopMatrix();
+            glEnd();
+
+            if(arrow->position.y < 1)
+            {
+                arrow->position.y = 7;
+                arrow->position.x = -2;
+            }
+
+            /* DRAWS ARROW */
+            glPushMatrix();
+            glScaled(.05,.05,1);
+            glTranslated(arrow->position.x,arrow->position.y,-1);
+            arrow->drawObj();
+            glPopMatrix();
+        }
     }
 }
 
-void GLScene::UI()
+void GLScene::UI(int amount)
 {
     /* DISPLAY HEALTH */
-    for(int a=0; a<3; a++)
+
+    for(int a=0; a<Ply->maxHealth; a++)
     {
         glPushMatrix();
         glScaled(.05,.05,1.0);
-        glTranslated(-15+a,7,-1);
+        glTranslated(-18+a,9,-1.2);
         PlayerHealth[a].animDraw();
         glPopMatrix();
     }
 
     /* DISPLAY MANA */
-    for(int i=0; i<6; i++)
+    for(int i=0; i<Ply->maxMana; i++)
     {
         glPushMatrix();
         glScaled(.05,.05,1.0);
-        glTranslated(-15+i,6,-1);
+        glTranslated(-18+i,8,-1.2);
         PlayerMana[i].animDraw();
+        glPopMatrix();
+    }
+    if(amount != NULL)
+    {
+        glPushMatrix();
+        glScaled(.05,.05,1.0);
+        glTranslated(-18+Ply->maxHealth,9,-1.2);
+        PlayerHealth[Ply->maxHealth].animDraw();
         glPopMatrix();
     }
 }
 
-void GLScene::updateUI(bool red, int point)
+void GLScene::SoundUpdate()
 {
-    /* UPDATES HEALTH UI */
-    if(red)
+    if(!startMenu)
     {
-        for(int i=0; i<3-point; i++)
-        {
-            PlayerHealth[i].xmin = 0.5;
-            PlayerHealth[i].xmax = 1.0;
-            PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
-        }
+        gameSound->music[0]->setPlayPosition(0);
+        gameSound->music[0]->setIsPaused(true);
     }
-    /* UPDATES MANA UI */
     else
     {
-        for(int j=0; j<6-point; j++)
+        gameSound->music[0]->setIsPaused(false);
+    }
+
+    if(!mainMenu)
+    {
+        gameSound->music[1]->setPlayPosition(0);
+        gameSound->music[1]->setIsPaused(true);
+    }
+    else
+    {
+        gameSound->music[1]->setIsPaused(false);
+    }
+
+    if(!mainGame)
+    {
+        gameSound->music[2]->setPlayPosition(0);
+        gameSound->music[2]->setIsPaused(true);
+    }
+    else
+    {
+        gameSound->music[2]->setIsPaused(false);
+    }
+}
+
+void GLScene::updateUI(bool red, bool add,int point)
+{
+    /* DECREASES */
+    /* UPDATES HEALTH UI */
+    if(!add)
+    {
+        if(red)
         {
-            PlayerMana[j].tex = ManaTex->tex;
-            PlayerMana[j].xmin = 0.0;
-            PlayerMana[j].xmax = 0.5;
-            PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
+            for(int i=0; i<(Ply->maxHealth)-point; i++)
+            {
+                PlayerHealth[i].xmin = 0.5;
+                PlayerHealth[i].xmax = 1.0;
+                PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
+            }
+        }
+        /* UPDATES MANA UI */
+        else
+        {
+            for(int j=0; j<(Ply->maxMana)-point; j++)
+            {
+                PlayerMana[j].tex = ManaTex->tex;
+                PlayerMana[j].xmin = 0.0;
+                PlayerMana[j].xmax = 0.5;
+                PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
+            }
+        }
+    }
+    /* INCREASES */
+    else
+    {
+        if(red)
+        {
+            for(int i=Ply->maxHealth-point; i>=0; i--)
+            {
+                PlayerHealth[i].xmin = 0.0;
+                PlayerHealth[i].xmax = 0.5;
+                PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
+            }
+        }
+        else
+        {
+            for(int j=Ply->maxMana-point; j>=0; j--)
+            {
+                PlayerMana[j].xmin = 0.5;
+                PlayerMana[j].xmax = 1.0;
+                PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
+            }
         }
     }
 
@@ -408,14 +519,13 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         keyB->wParam = wParam;
         if(!mainMenu && !startMenu)
         {
-            if(!pause)
-            {
-                keyB ->playerAction(Ply, Map1);
+            keyB ->playerAction(Ply, Map1);
 
                 /* THIS HAS TO BE HERE TO WORK, IDK WHY */
                 switch(wParam)
                 {
-                case 'Z':
+                case 'Z': /* ATTACK */
+
                     /* UP ATTACK */
                     if(Ply->ymin==0)
                     {
@@ -439,15 +549,20 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                     if(!attackAnim->show)
                         attackAnim->show = true;
-                    break;
-                case 'X':
-                    if(Ply->mana>0)
-                    {
-                        Ply->mana -=1;
-                        updateUI(false, Ply->mana);
+                    gameSound->playSound(gameSound->sfx[0]);
 
+                    break;
+                case 'X': /* SHOOTS FIREBALL */
+
+                    if(Ply->mana>0) // MANA CAN'T GO BELOW 0
+                    {
+                        Ply->mana -=1;              // DECREASES MANA WHEN PRESSING X
+                        updateUI(false, false, Ply->mana); // UPDATES MANA UI
+
+                        /* FIREBALL START POSITION WHEN FIRED */
                         fireball->position.x = 0;
                         fireball->position.y = 0;
+
                         if(Ply->ymin ==0)
                         {
                             fireball->objDir = "up";
@@ -478,7 +593,7 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             //arrow->position.y = keyB->keyArrow(arrow->position.y);
             keyB->keyArroe2(arrow, mainMenu);
         }
-        keyB->Menu(this,arrow->position.y);
+        keyB->Menu(this,arrow->position.x, arrow->position.y, Ply);
         break;
 
     case WM_KEYUP:								// Has A Key Been Released?
