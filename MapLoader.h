@@ -5,6 +5,8 @@
 #include<TextureLoader.h>
 #include<Player.h>
 #include<MapFrames.h>
+#include<EnemyChar.h>
+#include <vector>
 
 class MapLoader
 {
@@ -21,6 +23,7 @@ class MapLoader
 		int objectPosition(float, float); //Function that returns which cell player is in
 		void checkMapMovement(Player *, std::string);
 		void checkMapCollision(Player *, std::string);
+        std::vector<float> objectPositioner(int);
 
 		float xMax, xMin, yMax, yMin; //Texture coordinates
 		float moveIncrementX, moveIncrementY; //Float to determine how much the map will move by in the mapMove func
