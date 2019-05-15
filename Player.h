@@ -25,7 +25,10 @@ class Player
         int speed;
         int health, mana;
         int maxHealth, maxMana;
-        
+
+        int healthPotion;
+        int manaPotion;
+
         int currentPosition;
         int prevPosition;
         std::string actionTrigger;
