@@ -88,13 +88,16 @@ void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
     switch(wParam)
     {
     case VK_SPACE:
-        if(arrow >-6 && g->mainMenu==true)
+        if(!g->credit)
         {
-            g->mainMenu=false;
-        }
-        if(arrow <-6 && g->mainMenu==true)
-        {
-            g->exitGame=true;
+            if(arrowY >-6 && g->mainMenu==true)
+            {
+                g->mainMenu=false;
+            }
+            if(arrowY <-6 && g->mainMenu==true)
+            {
+                g->exitGame=true;
+            }
         }
         if(g->startMenu)
         {
@@ -121,17 +124,20 @@ void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
             }
             if(arrowX==2 && arrowY==7)
             {
-                if(p->maxHealth < 12)
+                if(p->maxMana < 12)
                 {
-                    p->maxHealth += 1;
-                    p->health = p->maxHealth;
-                    g->UI(p->maxHealth);
+                    p->maxMana += 3;
+                    g->UI(true, false);
                 }
             }
         }
-            
+
         break;
     case VK_ESCAPE:
+        if(g->credit)
+        {
+            if(g->credit) g->credit = false;
+        }
         if(!g->pause && !g->startMenu && !g->mainMenu)
         {
             g->pause=true;
