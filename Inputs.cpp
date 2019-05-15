@@ -110,28 +110,38 @@ void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
         }
         if(g->pause)
         {
-            if(arrowX==-2 && arrowY==7)
+            if(arrowX==-2 && arrowY==7 && p->healthPotion!=0)
             {
                 if(p->health != p->maxHealth)
                 {
+                    p->healthPotion -=1;
                     p->health += 1;
                     g->updateUI(true, true, p->health);
                 }
             }
             if(arrowX==-2 && arrowY==3)
             {
-                if(p->mana != p->maxMana)
+                if(p->mana != p->maxMana && p->manaPotion!=0)
                 {
+                    p->manaPotion -=1;
                     p->mana += 1;
                     g->updateUI(false, true, p->mana);
                 }
             }
-            if(arrowX==2 && arrowY==7)
+            if(arrowX==2 && arrowY==3)
             {
                 if(p->maxMana < 12)
                 {
                     p->maxMana += 3;
                     g->UI(true, false);
+                }
+            }
+            if(arrowX==2 && arrowY==7)
+            {
+                if(p->maxHealth < 12)
+                {
+                    p->maxHealth += 1;
+                    g->UI(true, true);
                 }
             }
         }
