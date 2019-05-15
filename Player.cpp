@@ -1,10 +1,11 @@
 #include "Player.h"
-#include<TextureLoader.h>
+#include<textureLoader.h>
 #include<Timer.h>
 #include<GL/gl.h>
 using namespace std;
+#include<objects.h>
 
-TextureLoader* t= new TextureLoader();
+textureLoader* t= new textureLoader();
 Timer* tt = new Timer();
 
 Player::Player()
@@ -31,14 +32,17 @@ Player::Player()
     xmax=1;
     ymax=1;
 
-    position.x = -.1;
-    position.y = -.1;
+    position.x = 0;
+    position.y = 0;
     position.z = 0;
 
     speed = 5;
-    
+
     maxHealth = 3;
     maxMana = 3;
+
+    healthPotion = 5;
+    manaPotion = 3;
 }
 
 Player::~Player()
@@ -122,7 +126,7 @@ void Player::playActions(std::string dir)
 
 void Player::playerAnimation() // plays animation
 {
-    if(tt->getTicks() > 100)
+    if(tt->getTickets() > 100)
     {
         xmin +=.1111111111;
         xmax +=.1111111111;
@@ -134,4 +138,3 @@ void Player::playerAnimation() // plays animation
         tt->reset();
     }
 }
-
