@@ -290,13 +290,12 @@ GLint GLScene::drawScene()
         glPopMatrix();
 
         /* DRAWS FIREBALL */
-        //std::cout << fireball->position.x << std::endl;
         if(fireball->show)
         {
             glPushMatrix();
             glScaled(.1,.1,1);
             if(!pause)
-                fireball->moveObj(fireball->objDir);
+                fireball->moveObj(fireball->objDir, fireball, Ply);
 
             glTranslated(fireball->position.x, fireball->position.y,-2);
             fireball->drawObj();
