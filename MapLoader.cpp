@@ -124,6 +124,9 @@ int MapLoader::objectPosition(float x, float y)
         yMarkMax -= yinc;
         yMarkMin -= yinc;
     }
+    if(y < yMarkMin){
+        yP = 90;
+    }
     return yP + xP;
 }
 
