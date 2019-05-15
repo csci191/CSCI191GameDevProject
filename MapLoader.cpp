@@ -59,7 +59,7 @@ void MapLoader::drawBG(float width, float height)
     glEnd();
 }
 
-//Changes map frame
+
 void MapLoader::mapMovement(std::string direction)
 {
 	if (direction == "right" && xMax < 1.000){
@@ -94,7 +94,6 @@ void MapLoader::mapMovement(std::string direction)
 		}
 	}
 }
-//Initialize all map values and mapFrames
 void MapLoader::mapInit(char *FileName, char *SecondFile)
 {
     glEnable(GL_BLEND);
@@ -103,11 +102,8 @@ void MapLoader::mapInit(char *FileName, char *SecondFile)
     mapFile = SecondFile;
     mp->initFrames(mapFile, 0);
 }
-//Returns the position of an object within the 10 by ten grid 0 is top left, 9 is top right, 99 is bottom right, 90 is bottom left 
 int MapLoader::objectPosition(float x, float y)
 {
-	//current bug where wrong number is displayed when at the bottom edge
-	//Bug has been accounted for in the rest of the code
     float xMarkMin = -1.775;
     float xinc = 0.3145;
     float yinc = 0.17;
@@ -130,7 +126,7 @@ int MapLoader::objectPosition(float x, float y)
     }
     return yP + xP;
 }
-//Checks whether player is in position to move to next frame then calls mapMove id frame change is possible
+
 void MapLoader::checkMapMovement(Player* Ply, std::string direction)
 {
         if (Ply->position.x >= 1.3 || Ply->position.x<=-1.7)
@@ -216,7 +212,7 @@ void MapLoader::checkMapMovement(Player* Ply, std::string direction)
         }
 
 }
-//checks for collision using adjacency matrix values between the player and the map 
+
 void MapLoader::checkMapCollision(Player* pl,  std::string direction)
 {
     if (direction == "left"){
@@ -260,5 +256,27 @@ void MapLoader::checkMapCollision(Player* pl,  std::string direction)
                }
             }
     }
+}
+
+ std::vector<float> MapLoader::objectPositioner(int pos)
+{
+    float xMPS = -1.775;
+    float xinc = 0.3145;
+    float yinc = 0.17;
+    float yMPS = 0.8;
+    int xLoc, yLoc;
+
+    xLoc = pos % 10;
+    yLoc = (pos-xLoc)/10 ;
+
+    float xcoord = xMPS + (xinc * xLoc);
+    xcoord += 0.0125;
+    float ycoord = yMPS - (yinc * yLoc);
+    ycoord -= 0.06;
+    std::vector<float> positions;
+    positions.push_back(xcoord);
+    positions.push_back(ycoord);
+    return positions;
+
 }
 
