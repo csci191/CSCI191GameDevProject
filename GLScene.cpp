@@ -65,8 +65,12 @@ objects* fireball = new objects();
 sounds* gameSound = new sounds();
 
 /* Items */
-textureLoader* HealthPotionTex = new textureLoader();
-objects* HealthPotion = new objects();
+textureLoader HealthPotionTex[2];
+objects HealthPotion[2];
+
+/* CREDITS */
+textureLoader creditTex[2];
+objects credits[2];
 
 GLScene::GLScene()
 {
@@ -139,8 +143,10 @@ GLint GLScene::initGL()
     fireball->show = false;
     
     /* HEALTH POTION */
-    HealthPotionTex->loadTexture("images/PotionG.png");
-    HealthPotion->objectTex = HealthPotionTex->tex;
+    HealthPotionTex[0].loadTexture("images/PotionG.png");
+    HealthPotionTex[1].loadTexture("images/PotionB.png");
+    HealthPotion[0].objectTex = HealthPotionTex[0].tex;
+    HealthPotion[1].objectTex = HealthPotionTex[1].tex;
 
     /* Sets Music */
     gameSound->setMusic("snds/music/MainMenu.ogg", false, 0);  // MUSIC 1
@@ -155,6 +161,14 @@ GLint GLScene::initGL()
     gameSound->setSFX("snds/attack.MP3", 0);                   // SFX 1
     gameSound->setSFXVolume(.5,0);
     
+    gameSound->setSFX("snds/music/explosion.wav ",1);
+    gameSound->setSFXVolume(1,1);
+    
+    creditTex[0].loadTexture("images/credit.png");
+    creditTex[1].loadTexture("images/creditPeople.png");
+    credits[0].objectTex = creditTex[0].tex;
+    credits[1].objectTex = creditTex[1].tex;
+    
     Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
     Ply->prevPosition = Ply->currentPosition;
 }
@@ -167,6 +181,29 @@ GLint GLScene::drawScene()
         mainGame =true;
     else
         mainGame = false;
+    
+    if(!mainGame)
+    {
+        Ply->health = Ply->maxHealth-2;
+        Ply->mana = Ply->maxMana;
+        for(int i=0; i<12; i++)
+        {
+            PlayerHealth[i].tex = HealthTex->tex;
+            PlayerHealth[i].xmin = 0.0;
+            PlayerHealth[i].xmax = 0.5;
+            PlayerHealth[i].show = true;
+            PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
+        }
+
+        for(int j=0; j<12; j++)
+        {
+            PlayerMana[j].tex = ManaTex->tex;
+            PlayerMana[j].xmin = 0.5;
+            PlayerMana[j].xmax = 1.0;
+            PlayerMana[j].show = true;
+            PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
+        }
+    }
     
     if(startMenu) // RENDERS STARTMENU
     {
@@ -217,45 +254,46 @@ GLint GLScene::drawScene()
             arrow->position.x = -6.4;
         }
 
-        /* ARROW CURSOR */
-        glPushMatrix();
-        glScaled(.05,.05,1);
-        glTranslated(2.5,arrow->position.y,-1);
-        arrow->drawObj();
-        glPopMatrix();
-
-        glPushMatrix();
-        glScaled(.3,.3,1);
-        glTranslated(-.5,-.5,-1);
-        MMObjects[0].drawObj();
-        glPopMatrix();
-
-        glPushMatrix();
-        glScaled(.3,.3,1);
-        glTranslated(-.5,-1.5,-1);
-        MMObjects[1].drawObj();
-        glPopMatrix();
-
-        /* SETS HEALTH AND MANA */
-        Ply->health = Ply->maxHealth;
-        Ply->mana = Ply->maxMana;
-
-        for(int i=0; i<12; i++)
+         if(!credit)
         {
-            PlayerHealth[i].tex = HealthTex->tex;
-            PlayerHealth[i].xmin = 0.0;
-            PlayerHealth[i].xmax = 0.5;
-            PlayerHealth[i].show = true;
-            PlayerHealth[i].animInit((float)PlayerHealth[i].xmin, (float)PlayerHealth[i].xmax, 0, 1);
+            if(arrow->position.y > 1)
+            {
+                arrow->position.y = -.2;
+                arrow->position.x = -6.4;
+            }
+
+            /* ARROW CURSOR */
+            glPushMatrix();
+            glScaled(.05,.05,1);
+            glTranslated(2.5,arrow->position.y,-1);
+            arrow->drawObj();
+            glPopMatrix();
+
+            glPushMatrix();
+            glScaled(.3,.3,1);
+            glTranslated(-.5,-.5,-1.2);
+            MMObjects[0].drawObj();
+            glPopMatrix();
+
+            glPushMatrix();
+            glScaled(.3,.3,1);
+            glTranslated(-.5,-1.7,-1.2);
+            MMObjects[1].drawObj();
+            glPopMatrix();
+
+            glPushMatrix();
+            glScaled(.25,.25,1);
+            glTranslated(-.5,-1.1,-1.1);
+            credits[0].drawObj();
+            glPopMatrix();
         }
-
-        for(int j=0; j<12; j++)
+        else
         {
-            PlayerMana[j].tex = ManaTex->tex;
-            PlayerMana[j].xmin = 0.5;
-            PlayerMana[j].xmax = 1.0;
-            PlayerMana[j].show = true;
-            PlayerMana[j].animInit((float)PlayerMana[j].xmin, (float)PlayerMana[j].xmax, 0, 1);
+            glPushMatrix();
+            glScaled(.5,.5,1);
+            glTranslated(-.5,-.5,-1);
+            credits[1].drawObj();
+            glPopMatrix();
         }
     }
 
@@ -377,11 +415,31 @@ GLint GLScene::drawScene()
             glTranslated(arrow->position.x,arrow->position.y,-1);
             arrow->drawObj();
             glPopMatrix();
+            
+            if(Ply->healthPotion != 0)
+            {
+
+
+                glPushMatrix();
+                glScaled(.1,.1,1);
+                glTranslated(-2,3.1,-1);
+                HealthPotion[0].drawObj();
+                glPopMatrix();
+            }
+
+            if(Ply->manaPotion !=0)
+            {
+                glPushMatrix();
+                glScaled(.1,.1,1);
+                glTranslated(-2,1.2,-1);
+                HealthPotion[1].drawObj();
+                glPopMatrix();
+            }
         }
     }
 }
 
-void GLScene::UI(int amount)
+void GLScene::UI(bool expand, bool red)
 {
     /* DISPLAY HEALTH */
 
@@ -403,13 +461,25 @@ void GLScene::UI(int amount)
         PlayerMana[i].animDraw();
         glPopMatrix();
     }
-    if(amount != NULL)
+
+    if(expand != NULL)
     {
-        glPushMatrix();
-        glScaled(.05,.05,1.0);
-        glTranslated(-18+Ply->maxHealth,9,-1.2);
-        PlayerHealth[Ply->maxHealth].animDraw();
-        glPopMatrix();
+        if(red)
+        {
+            glPushMatrix();
+            glScaled(.05,.05,1.0);
+            glTranslated(-18+Ply->maxHealth,9,-1.2);
+            PlayerHealth[Ply->maxHealth].animDraw();
+            glPopMatrix();
+        }
+        else
+        {
+            glPushMatrix();
+            glScaled(.05,.05,1.0);
+            glTranslated(-18+Ply->maxMana,8,-1.2);
+            PlayerMana[Ply->maxMana].animDraw();
+            glPopMatrix();
+        }
     }
 }
 
