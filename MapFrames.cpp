@@ -41,9 +41,15 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
 
     float tempH = 0;
     float tempV = 0;
+    float tempJ = 0;
     frame = searchFrame;
     bool currentFrame = false;
     float tempFrame;
+    if (enemyPositions.size() > 2);{
+        enemyPositions.pop_back();
+        enemyPositions.pop_back();
+        enemyPositions.pop_back();
+    }
 
 	//File reading the C way
 	FILE * file = fopen(fileName, "r");
@@ -61,7 +67,7 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
             break; //breaks if the end of file is reached
         		   //else we move into the parser
 
-        if ( strcmp( lineHeader, "f" ) == 0){		//f is the frame number
+        if ( strcmp( lineHeader, "f" ) == 0){
         	fscanf(file, "%f", &tempFrame);
         	if ((int)tempFrame == frame){
                 currentFrame = true;
@@ -70,15 +76,15 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
                 currentFrame = false;
         	}
         	//frames = (AdjacencyMatrix*)malloc(sizeof(int)*13);
-        }else if (strcmp( lineHeader, "p" ) == 0 && currentFrame == true){ //p is for popping connections from the matrix
+        }else if (strcmp( lineHeader, "p" ) == 0 && currentFrame == true){
         	fscanf(file, "%f %f\n", &tempH, &tempV);
         	adjPop((int)tempH, (int)tempV);
             adjPop((int)tempV, (int)tempH);
-        } else if ( strcmp( lineHeader, "v" ) == 0){                      //v is for defining frame to frame connections
+        } else if ( strcmp( lineHeader, "v" ) == 0){
             fscanf(file, "%f %f\n", &tempH, &tempV);
             frameConnections[tempH][tempV] = 1;
             frameConnections[tempV][tempH] = 1;
-        }else if (strcmp( lineHeader, "dl") == 0 && currentFrame == true){ //dl = left Door dr = right Door du = top Door etc...
+        }else if (strcmp( lineHeader, "dl") == 0 && currentFrame == true){
             fscanf(file, "%f %f\n", &tempH, &tempV);
             doorList[frame][0] = (int)tempH;
             doorList[frame][1] = (int)tempV;
@@ -94,6 +100,14 @@ void MapFrames::initFrames(char *fileName, int searchFrame)
             fscanf(file, "%f %f\n", &tempH, &tempV);
             doorList[frame][6] = (int)tempH;
             doorList[frame][7] = (int)tempV;
+        }else if (strcmp(lineHeader, "e" ) == 0 && currentFrame == true){
+            fscanf(file, "%f %f %f\n", &tempH, &tempV, &tempJ);
+            enemyPositions.push_back((int)tempH);
+            enemyPositions.push_back((int)tempV);
+            enemyPositions.push_back((int)tempJ);
+        }else if (strcmp (lineHeader, "b") == 0 && currentFrame == true){
+            fscanf(file, "%f\n", &tempH);
+            bossPos = (int)tempH;
         }
 
     }
