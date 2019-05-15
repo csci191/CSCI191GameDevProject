@@ -518,7 +518,9 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         keyB->wParam = wParam;
         if(!mainMenu && !startMenu)
         {
-            keyB ->playerAction(Ply, Map1);
+            if(!pause)
+            {
+                keyB ->playerAction(Ply, Map1);
 
                 /* THIS HAS TO BE HERE TO WORK, IDK WHY */
                 switch(wParam)
@@ -552,15 +554,11 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                     break;
                 case 'X': /* SHOOTS FIREBALL */
-
-                    if(Ply->mana>0) // MANA CAN'T GO BELOW 0
+                    if(Ply->mana>0 && !fireball->moving && !fireball->show) // MANA CAN'T GO BELOW 0
                     {
+                        gameSound->playSound(gameSound->sfx[1]);
                         Ply->mana -=1;              // DECREASES MANA WHEN PRESSING X
                         updateUI(false, false, Ply->mana); // UPDATES MANA UI
-
-                        /* FIREBALL START POSITION WHEN FIRED */
-                        fireball->position.x = 0;
-                        fireball->position.y = 0;
 
                         if(Ply->ymin ==0)
                         {
@@ -580,8 +578,7 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                             fireball->objDir = "right";
                             fireball->xmax = 1;
                         }
-                        if(Ply->mana >0)
-                            fireball->show = true;
+                        fireball->show = true;
                     }
                     break;
                 }
