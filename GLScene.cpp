@@ -72,6 +72,10 @@ objects HealthPotion[2];
 textureLoader creditTex[2];
 objects credits[2];
 
+/*how to play */
+textureLoader* howtoplayTex = new textureLoader();
+objects* howtoplay = new objects();
+
 GLScene::GLScene()
 {
     //ctor
@@ -168,6 +172,9 @@ GLint GLScene::initGL()
     creditTex[1].loadTexture("images/creditPeople.png");
     credits[0].objectTex = creditTex[0].tex;
     credits[1].objectTex = creditTex[1].tex;
+    
+    howtoplayTex->loadTexture("images/howtoplay.png");
+    howtoplay->objectTex = howtoplayTex->tex;
     
     Ply->currentPosition = Map1->objectPosition(Ply->position.x, Ply->position.y);
     Ply->prevPosition = Ply->currentPosition;
@@ -435,6 +442,12 @@ GLint GLScene::drawScene()
                 HealthPotion[1].drawObj();
                 glPopMatrix();
             }
+            
+             glPushMatrix();
+                glScaled(.2,.2,1);
+                glTranslated(-.5,-.6,-1);
+                howtoplay->drawObj();
+            glPopMatrix();
         }
     }
 }
