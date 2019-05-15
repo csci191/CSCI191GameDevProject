@@ -90,13 +90,17 @@ void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
     case VK_SPACE:
         if(!g->credit)
         {
-            if(arrowY >-6 && g->mainMenu==true)
+            if(arrowY >-2.7 && g->mainMenu==true)
             {
                 g->mainMenu=false;
             }
             if(arrowY <-6 && g->mainMenu==true)
             {
                 g->exitGame=true;
+            }
+            if(arrowY < -2.7 && arrowY >-3 && g->mainMenu ==true)
+            {
+                g->credit = true;
             }
         }
         if(g->startMenu)
@@ -136,7 +140,8 @@ void Inputs::Menu(GLScene* g, float arrowX, float arrowY, Player* p)
     case VK_ESCAPE:
         if(g->credit)
         {
-            if(g->credit) g->credit = false;
+            if(g->credit)
+                g->credit = false;
         }
         if(!g->pause && !g->startMenu && !g->mainMenu)
         {
@@ -177,13 +182,27 @@ void Inputs::keyArroe2(objects* ob,bool menu)
     {
     case VK_UP:
         if(menu)
-            ob->position.y = -.2;
+            if(ob->position.y <=-6.4)
+            {
+                ob->position.y = -2.7;
+            }
+            else
+            {
+                ob->position.y = -.2;
+            }
         else
             ob->position.y = 7;
         break;
     case VK_DOWN:
         if(menu)
-            ob->position.y = -6.4;
+            if(ob->position.y < -.2 && ob->position.y > -.3)
+            {
+                ob->position.y = -2.7;
+            }
+            else
+            {
+                ob->position.y = -6.4;
+            }
         else
             ob->position.y = 3;
         break;
