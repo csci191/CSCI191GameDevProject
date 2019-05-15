@@ -20,11 +20,12 @@ class GLScene
         bool mainMenu = false;
         bool mainGame = false;
         bool exitGame = false;
+        bool credit = false;
 
         int winMsg(HWND,UINT,WPARAM,LPARAM);
         float screenWidth, screenHeight;
         void updateUI(bool, bool, int);
-        void UI(int a=NULL);
+        void UI(bool expand = NULL, bool red = NULL);
         void SoundUpdate();
 
     protected:
