@@ -1,7 +1,10 @@
 #include "objects.h"
 #include<textureLoader.h>
+#include<Timer.h>
 
 textureLoader* tl = new textureLoader();
+Timer* objTimer = new Timer();
+
 objects::objects()
 {
     //ctor
@@ -25,6 +28,11 @@ objects::objects()
     ymin=0;
     xmax=1;
     ymax=1;
+
+    show = true;
+    moving = false;
+
+    maxDistanceX = 5;
 }
 
 objects::~objects()
@@ -34,9 +42,10 @@ objects::~objects()
 
 void objects::drawObj()
 {
-    glBindTexture(GL_TEXTURE_2D, objectTex);
-
-    glBegin(GL_QUADS);
+    if(show)
+    {
+        glBindTexture(GL_TEXTURE_2D, objectTex);
+        glBegin(GL_QUADS);
         glTexCoord2f(xmin,ymax);
         glVertex3f(verticies[0].x,verticies[0].y,verticies[0].z);
 
@@ -48,26 +57,52 @@ void objects::drawObj()
 
         glTexCoord2f(xmin,ymin);
         glVertex3f(verticies[3].x,verticies[3].y,verticies[3].z);
-    glEnd();
-
+        glEnd();
+    }
 }
 
-void objects::objInit(char* filename)
+void objects::objInit()
 {
-    /*
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    tl->bindTexture(filename);
-    */
+}
 
-    /* First frame in sprite sheet*/
-    xmin=0;
-    xmax=.1111111111;
+void objects::moveObj(string dir, objects* o, Player* p)
+{
 
-    ymin=0;
-    ymax=.25;
+    if(p != NULL && o->show && !moving)
+    {
+            o->position.x = (p->position.x*10)+1.7;
+            o->position.y = (p->position.y*10)+1;
+    }
+    moving = true;
+    if(objTimer->getTickets()>1)
+    {
+        if(dir=="right")
+        {
+            o->position.x +=.5;
+            if(o->position.x > 15) show = false;
+        }
+        else if(dir == "left")
+        {
+            o->position.x -=.5;
+            if(o->position.x < -15) show = false;
+        }
+        else if(dir == "up")
+        {
+            o->position.y += .5;
+            if(o->position.y > 15) show = false;
+        }
+        else if(dir == "down")
+        {
+            o->position.y -=.5;
+            if(o->position.y < -15) show = false;
+        }
+        objTimer->reset();
+    }
 
-
+    if(!show) moving = false;
 }
 
