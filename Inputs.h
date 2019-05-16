@@ -29,11 +29,17 @@ public:
 
     bool mouse_Translate;
     bool mouse_Rotate;
+    
+    /*WALKING SOUND ITEMS*/
+    Timer *TimeSnd = new Timer();
+
+    void walkingSound(Sounds *);
+
+    bool firstStep = true;
+    bool secondStep = false;
+    bool thirdStep = false;
 
     WPARAM wParam;
-
-
-
 
 protected:
 
