@@ -26,7 +26,7 @@ EnemyBoss::EnemyBoss()
 
     position.x = -0.1;
     position.y = -0.6;
-    position.z = 0;
+    position.z = 0.02;
 
     xMove = 0.0;
     yMove = 0.001;
@@ -61,7 +61,7 @@ void EnemyBoss::drawBoss()
     glPopMatrix();
 }
 
-void EnemyBoss::bossInit(char* fileName)
+void EnemyBoss::bossInit(char* fileName, char* nameFile)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -69,6 +69,7 @@ void EnemyBoss::bossInit(char* fileName)
     bossTex->loadTexture(fileName);
     bossSpawner->start();
     bossTimerAppear->start();
+    bossSound->start();
 
     /* First frame in sprite sheet*/
     xMin = 0.0;
@@ -82,33 +83,35 @@ void EnemyBoss::bossInit(char* fileName)
 void EnemyBoss::bossSpawn()
 {
     appear = true;
-    bossActions();
+    bossActions(bossSND);
     if((bossTimerAppear->getTicks() > 6000) && (bossTimerAppear->getTicks() < 6050))
     {
         actionBoss = 20;
         bossAppear(0);
-        cout << "spawning case 0" << endl;
+        //cout << "spawning case 0" << endl;
     }
     else if((bossTimerAppear->getTicks() > 11000) && (bossTimerAppear->getTicks() < 11050))
     {
         actionBoss = 20;
         bossAppear(1);
-        cout << "spawning case 1" << endl;
+        //cout << "spawning case 1" << endl;
     }
     else if((bossTimerAppear->getTicks() > 16000) && (bossTimerAppear->getTicks() < 16050))
     {
         actionBoss = 20;
         bossAppear(2);
-        cout << "spawning case 2" << endl;
+        //cout << "spawning case 2" << endl;
     }
     else if((bossTimerAppear->getTicks() > 21000) && (bossTimerAppear->getTicks() < 21050))
     {
         actionBoss = 20;
         bossAppear(3);
-        cout << "spawning case 3" << endl;
+        //cout << "spawning case 3" << endl;
     }
     else if(bossTimerAppear -> getTicks() > 26000)
     {
+        actionBoss = 20;
+        bossAppear(4);
         bossTimerAppear -> reset();
     }
 }
@@ -123,7 +126,7 @@ void EnemyBoss::bossAppear(int placementBoss)
             {
                 bossAnimation(-1.2, -0.6); //Bottom left corner
                 //cout << "Doing case 1 appear." << endl;
-                bossActions();
+                bossActions(bossSND);
             }
             break;
 
@@ -131,7 +134,7 @@ void EnemyBoss::bossAppear(int placementBoss)
             {
                 bossAnimation(0.8, -0.6); //Bottom right corner
                 //cout << "Doing case 2 appear." << endl;
-                bossActions();
+                bossActions(bossSND);
             }
             break;
 
@@ -139,7 +142,8 @@ void EnemyBoss::bossAppear(int placementBoss)
             {
                 bossAnimation(0.8, 0.35); //top right corner
                 //cout << "Doing case 3 appear." << endl;
-                bossActions();
+                bossSND->pauseSound("snds/OOT_Ganondorf_Heheh.wav");
+                bossActions(bossSND);
             }
             break;
 
@@ -147,7 +151,7 @@ void EnemyBoss::bossAppear(int placementBoss)
             {
                 bossAnimation(-1.2, 0.35); //Top left corner
                 //cout << "Doing case 4 appear." << endl;
-                bossActions();
+                bossActions(bossSND);
             }
             break;
 
@@ -155,15 +159,15 @@ void EnemyBoss::bossAppear(int placementBoss)
             {
                 bossAnimation(-0.1, -0.6); //Top left corner
                 //cout << "Doing case 4 appear." << endl;
-                actionBoss = 0;
-                bossActions();
+                bossSND->pauseSound("snds/OOT_Ganondorf_Heheh.wav");
+                bossActions(bossSND);
             }
             break;
         }
     }
 }
 
-void EnemyBoss::bossActions()
+void EnemyBoss::bossActions(Sounds* SND)
 {
     switch(actionBoss)
     {
@@ -187,11 +191,14 @@ void EnemyBoss::bossActions()
                     xMin = 0.75;
                     xMax = 1.0;
                     actionBoss = 1;
+                    SND->pauseSound("snds/OOT_Ganondorf_Heheh.wav");
+                    teleportIn = false;
+                    teleportOut = true;
                 }
 
                 bossTimer -> reset();
             }
-           cout << "doing case 0" << endl;
+           //cout << "doing case 0" << endl;
         break;
 
         case 1: //standing facing right
@@ -217,7 +224,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "doing case 1" << endl;
+            //cout << "doing case 1" << endl;
         break;
 
         case 2: //Standing facing right
@@ -244,7 +251,7 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-           cout << "doing case 2" << endl;
+           //cout << "doing case 2" << endl;
         break;
 
         case 3: //standing facing right
@@ -270,7 +277,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "doing case 3" << endl;
+            //cout << "doing case 3" << endl;
         break;
 
         case 4: //Standing facing right
@@ -297,7 +304,7 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-           cout << "doing case 4" << endl;
+           //cout << "doing case 4" << endl;
         break;
 
         case 5: //standing facing right
@@ -323,7 +330,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "doing case 5" << endl;
+            //cout << "doing case 5" << endl;
         break;
 
         case 6: //Standing facing right
@@ -347,12 +354,17 @@ void EnemyBoss::bossActions()
                     yMax = 0.6666666666666666666666;
                     xMin = 0.0;
                     xMax = 0.25;
+
+                    SND->pauseSound("snds/LA_Genie_Disappear.wav");
+                    teleportIn = true;
+                    teleportOut = false;
+
                     actionBoss = 7;
                 }
 
                 bossTimer -> reset();
             }
-           cout << "doing case 6" << endl;
+           //cout << "doing case 6" << endl;
         break;
 
         case 7: //standing facing right
@@ -381,7 +393,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "doing case 7" << endl;
+            //cout << "doing case 7" << endl;
         break;
 
         case 8: //melting facing right
@@ -408,7 +420,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "doing case 8" << endl;
+            //cout << "doing case 8" << endl;
         break;
 
         case 9: //melting facing right
@@ -423,7 +435,7 @@ void EnemyBoss::bossActions()
                 bossTimer -> reset();
             }
             //int current = bossSpawner->getTicks();
-            cout << "doing case 9 " /*<< current*/ << endl;
+           // cout << "doing case 9 " /*<< current*/ << endl;
         break;
 
         case 10: //Standing facing right
@@ -452,7 +464,7 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-           cout << "teleporting case 10" << endl;
+           //cout << "teleporting case 10" << endl;
         break;
 
         case 11: //Standing facing right
@@ -481,7 +493,7 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-           cout << "teleporting case 11" << endl;
+           //cout << "teleporting case 11" << endl;
         break;
 
         case 12: //Standing facing right
@@ -510,7 +522,7 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-           cout << "teleporting case 12" << endl;
+           //cout << "teleporting case 12" << endl;
         break;
 
         case 13: //Standing facing right
@@ -532,12 +544,14 @@ void EnemyBoss::bossActions()
                 {
                     xMin = 0.75;
                     xMax = 1.0;
+                    attackPly = true;
+                    SND->pauseSound("snds/LTTP_Agahnim_Charge.wav");
                     actionBoss = 14;
                 }
 
                 bossTimer -> reset();
             }
-           cout << "teleporting case 13" << endl;
+           //cout << "teleporting case 13" << endl;
         break;
 
         case 14: //standing facing right
@@ -559,15 +573,15 @@ void EnemyBoss::bossActions()
                 {
                     xMin = 0.0;
                     xMax = 0.25;
-                    actionBoss = 5;
+                    actionBoss = 15;
                 }
                 bossTimer -> reset();
             }
-            cout << "teleporting case 14" << endl;
+            //cout << "teleporting case 14" << endl;
         break;
 
         case 15: //Standing facing right
-            if(bossTimer -> getTicks()>100)
+            if((bossTimer -> getTicks()>100) && (bossSound->getTicks()>400) && (teleportOut))
             {
                 yMin = 0.0;
                 yMax = 0.3333333333333333333333;
@@ -587,12 +601,16 @@ void EnemyBoss::bossActions()
                     yMax = 0.6666666666666666666666;
                     xMin = 0.0;
                     xMax = 0.25;
-                    actionBoss = 6;
+                    SND->pauseSound("snds/LA_Genie_Appear.wav");
+                    teleportIn = true;
+                    teleportOut = false;
+
+                    actionBoss = 16;
                 }
 
                 bossTimer -> reset();
             }
-           cout << "teleporting case 15" << endl;
+           //cout << "teleporting case 15" << endl;
         break;
 
         case 16: //standing facing right
@@ -618,10 +636,11 @@ void EnemyBoss::bossActions()
                     xMin = 0.0;
                     xMax = 0.25;
                     actionBoss = 17;
+                    attackPly = false;
                 }
                 bossTimer -> reset();
             }
-            cout << "teleporting case 16" << endl;
+            //cout << "teleporting case 16" << endl;
         break;
 
         case 17: //melting facing right
@@ -648,7 +667,7 @@ void EnemyBoss::bossActions()
                 }
                 bossTimer -> reset();
             }
-            cout << "teleporting case 17" << endl;
+            //cout << "teleporting case 17" << endl;
         break;
 
         case 18: //melting facing right
@@ -662,11 +681,11 @@ void EnemyBoss::bossActions()
 
                 bossTimer -> reset();
             }
-            cout << "teleporting case 18" << endl;
+            //cout << "teleporting case 18" << endl;
         break;
 
         case 20: //melting facing right
-            if(bossTimer -> getTicks()>100)
+            if((bossTimer -> getTicks()>100) && (bossSound->getTicks()>400))
             {
                 yMin = 0.6666666666666666666667;
                 yMax = 1.0;
@@ -674,9 +693,16 @@ void EnemyBoss::bossActions()
                 xMin = 0.75;
                 xMax = 1.0;
 
+                if(teleportIn)
+                {
+                    SND->pauseSound("snds/LA_Genie_Appear.wav");
+                    teleportIn = false;
+                    teleportOut = true;
+                }
+
                 actionBoss = 10;
             }
-            cout << "doing case 20 " << endl;
+            //cout << "doing case 20 " << endl;
         break;
 
         case 21: //melting facing right
@@ -690,7 +716,7 @@ void EnemyBoss::bossActions()
 
                 actionBoss = 0;
             }
-            cout << "doing case 21 " << endl;
+            //cout << "doing case 21 " << endl;
         break;
     }
 }
