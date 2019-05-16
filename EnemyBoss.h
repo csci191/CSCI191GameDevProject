@@ -7,6 +7,7 @@
 #include <Player.h>
 #include <iostream>
 #include <string>
+#include <Sounds.h>
 
 using namespace std;
 
@@ -25,10 +26,10 @@ class EnemyBoss
         vec position; // the boss x,y,z position
 
         void drawBoss();
-        void bossInit(char* );
+        void bossInit(char*, char*);
         void bossAppear(int);
         void bossSpawn();
-        void bossActions();
+        void bossActions(Sounds*);
         void bossAnimation(float, float);
 
         float xMin, yMin, xMax, yMax;
@@ -43,11 +44,16 @@ class EnemyBoss
 
         float xMove, yMove;
         bool appear = false;
+        bool teleportIn = true;
+        bool teleportOut = false;
+        bool attackPly = false;
 
         TextureLoader* bossTex = new TextureLoader();
+        Sounds * bossSND = new Sounds();
         Timer* bossTimer = new Timer();
         Timer* bossTimerAppear = new Timer();
         Timer* bossSpawner = new Timer();
+        Timer* bossSound = new Timer();
 
     protected:
 
