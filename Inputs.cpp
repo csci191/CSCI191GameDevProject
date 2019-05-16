@@ -226,3 +226,118 @@ void Inputs::keyArroe2(objects* ob,bool menu)
         break;
     }
 }
+
+void Inputs::walkingSound(Sounds* SND)
+{
+    switch(wParam)
+    {
+    case VK_LEFT:
+        if(TimeSnd->getTicks()>400 && (firstStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone1.wav");
+            firstStep = false;
+            secondStep = true;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (secondStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone2.wav");
+            firstStep = false;
+            secondStep = false;
+            thirdStep = true;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (thirdStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone3.wav");
+            firstStep = true;
+            secondStep = false;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        break;
+
+
+    case VK_RIGHT:
+        if(TimeSnd->getTicks()>400 && (firstStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone1.wav");
+            firstStep = false;
+            secondStep = true;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (secondStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone2.wav");
+            firstStep = false;
+            secondStep = false;
+            thirdStep = true;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (thirdStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone3.wav");
+            firstStep = true;
+            secondStep = false;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        break;
+
+    case VK_UP:
+        if(TimeSnd->getTicks()>400 && (firstStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone1.wav");
+            firstStep = false;
+            secondStep = true;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (secondStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone2.wav");
+            firstStep = false;
+            secondStep = false;
+            thirdStep = true;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (thirdStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone3.wav");
+            firstStep = true;
+            secondStep = false;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        break;
+
+    case VK_DOWN:
+        if(TimeSnd->getTicks()>400 && (firstStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone1.wav");
+            firstStep = false;
+            secondStep = true;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (secondStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone2.wav");
+            firstStep = false;
+            secondStep = false;
+            thirdStep = true;
+            TimeSnd->reset();
+        }
+        else if(TimeSnd->getTicks()>400 && (thirdStep))
+        {
+            SND->pauseSound("snds/OOT_Steps_Stone3.wav");
+            firstStep = true;
+            secondStep = false;
+            thirdStep = false;
+            TimeSnd->reset();
+        }
+        break;
+    }
+}
