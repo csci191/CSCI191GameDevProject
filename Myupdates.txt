@@ -1,0 +1,95 @@
+keyB -> walkingSound(gameSound);
+
+/////////////////////////////////////////////////////////////////////
+/* DRAWS ENEMY2 */
+        glPushMatrix();
+        glScaled(3.33,3.33,1.0);
+        EChar2->drawEnemy();
+        if(!pause)
+        {
+            EChar2->actionEnemy = 0;
+            EChar2->enemyActions();
+            if(EChar2->position.x < -0.8)
+            {
+                EChar2->xMove = 0.02;
+            }
+            else if (EChar2->position.x > 0.7)
+            {
+                EChar2->xMove = -0.02;
+            }
+            else if (EChar2->position.y > 0.6)
+            {
+                EChar2->yMove = -0.02;
+            }
+            else if (EChar2->position.y < -0.6)
+            {
+                EChar2->yMove = 0.02;
+            }
+            EChar2->position.x += EChar2->xMove;
+            EChar2->position.y += EChar2->yMove;
+        }
+        glPopMatrix();
+
+        glPushMatrix();
+        glScaled(5.0,5.0,1.0);
+        if(!pause)
+        {
+            if(Boss->attackPly)
+            {
+                BossMagic->position.x = Boss->position.x;
+                BossMagic->position.y = Boss->position.y;
+                BossMagic->tempPlayerX = Ply->position.x;
+                BossMagic->tempPlayerY = Ply->position.y;
+            }
+            if(BossMagic->position.x <= BossMagic->tempPlayerX)
+            {
+                BossMagic->xMove = 0.04;
+            }
+            if(BossMagic->position.x >= BossMagic->tempPlayerX)
+            {
+                BossMagic->xMove = -0.04;
+            }
+            if(BossMagic->position.y >= BossMagic->tempPlayerY)
+            {
+                BossMagic->yMove = -0.06;
+            }
+            if(BossMagic->position.y <= BossMagic->tempPlayerY)
+            {
+                BossMagic->yMove = 0.06;
+            }
+            BossMagic->fireActions(Boss);
+            BossMagic->drawFire();
+            BossMagic->position.x += BossMagic->xMove;
+            BossMagic->position.y += BossMagic->yMove;
+        }
+        glPopMatrix();
+
+
+        glPushMatrix();
+        glScaled(3.33,3.33,1.0);
+        Boss->drawBoss();
+        if(!pause)
+        {
+            Boss->bossSpawn();
+        }
+        glPopMatrix();
+
+///////////////////////////////////////////////////////////////////////////////////
+
+    /* BOSS MAGIC */
+    BossMagic->fireInit("images/discipleMagic.png");
+
+////////////////////////////////////////////////////////////////////
+
+//Enemy texture
+    Boss->bossInit("images/disciple.png", "images/discipleMagic.png");
+    EChar2->enemyInit("images/spikeBall.png");
+///////////////////////////////////////////////////////////////
+
+/*     Enemy Texture     */
+TextureLoader *BFTex = new TextureLoader();
+EnemyBoss *Boss = new EnemyBoss();
+BossFire *BossMagic = new BossFire();
+EnemySpike *EChar2 = new EnemySpike();
+////////////////////////////////////////////////////////////////
+Timer *Magic = new Timer();
